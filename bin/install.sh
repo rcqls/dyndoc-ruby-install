@@ -1,47 +1,47 @@
 #!/bin/bash
 
-echo check git
-if [ $(which git) == "" ]; then
+echo "check git in PATH"
+if [ $(which git) = "" ]; then
 	echo "git is not installed!" 
  	exit
 else
 	echo ok
 fi
 
-echo check ruby
-if [ $(which ruby) == "" ]; then
+echo "check ruby in PATH"
+if [ $(which ruby) = "" ]; then
 	echo "ruby is not installed!" 
  	exit
 else
 	echo ok
 fi
 
-echo check R
-if [ $(which R) == "" ]; then
+echo "check R in PATH"
+if [ $(which R) = "" ]; then
 	echo "R is not installed!" 
  	exit
 else
 	echo ok
 fi
 
-echo check gem
-if [ $(which gem) == "" ]; then
+echo "check gem in PATH"
+if [ $(which gem) = "" ]; then
 	echo "gem is not installed!" 
  	exit
 else
 	echo ok
 fi
 
-echo check atom
-if [ $(which atom) == "" ]; then
+echo "check atom in PATH"
+if [ $(which atom) = "" ]; then
 	echo "atom is not installed!" 
  	exit
 else
 	echo ok
 fi
 
-echo check apm
-if [ $(which apm) == "" ]; then
+echo "check apm in PATH"
+if [ $(which apm) = "" ]; then
 	echo "apm is not installed!" 
  	exit
 else
@@ -49,11 +49,13 @@ else
 fi
 
 mkdir -p ../install
-echo install bundler gem
-gem install bundler --no-ri --no-rdoc
+if [ $(gem which bundler) == "" ]; then
+	echo install bundler gem
+	gem install bundler --no-ri --no-rdoc
+fi
 
-echo check bundle
-if [ $(which bundle) == "" ]; then
+echo check bundle in PATH
+if [ $(which bundle) = "" ]; then
 	echo "bundle is not installed!"
  	read -p "Add `ruby -e 'print Gem.user_dir'`/bin to PATH in ~/.bash_profile? [Y/N]" -n 1 -r
 	echo    # (optional) move to a new line
@@ -64,14 +66,16 @@ if [ $(which bundle) == "" ]; then
 	fi
 fi
 echo recheck bundle
-if [ $(which bundle) == "" ]; then
+if [ $(which bundle) = "" ]; then
 	echo "bundle is not installed!" 
  	exit
 else
 	echo ok
 fi
+
 echo install dyndoc dependencies
 bundle install
+
 echo install rb4R R package
 cd ../install
 git clone https://github.com/rcqls/rb4R.git
