@@ -1,5 +1,6 @@
 #!/bin/bash
-#!/bin/bash
+
+DYNDOC_HOME=~/dyndoc
 
 echo "check git in PATH"
 if [ "$(which git)" = "" ]; then
@@ -49,13 +50,17 @@ else
 	echo ok
 fi
 
-mkdir -p ../install
+echo copy dyndoc home directory
+mkdir -p $DYNDOC_HOME
+cp -r ../dyndoc_basic_root_structure/* $DYNDOC_HOME
+
+mkdir -p $DYNDOC_HOME/install
 if [ "$(gem which bundler)" = "" ]; then
 	echo install bundler gem
 	gem install bundler --no-ri --no-rdoc
 fi
 
-echo check bundle in PATH
+echo "check bundle in PATH"
 if [ "$(which bundle)" = "" ]; then
 	echo "bundle is not installed!"
  	read -p "Add `ruby -e 'print Gem.user_dir'`/bin to PATH in ~/.bash_profile? [Y/N]" -n 1 -r
@@ -67,7 +72,7 @@ if [ "$(which bundle)" = "" ]; then
 		. ${HOME}/.bash_profile
 	fi
 fi
-echo recheck bundle
+echo "recheck bundle in PATH"
 if [ "$(which bundle)" = "" ]; then
 	echo "bundle is not installed!" 
  	exit
@@ -75,16 +80,23 @@ else
 	echo ok
 fi
 
-echo install dyndoc dependencies
+echo "install dyndoc dependencies"
 bundle install
 
-echo install rb4R R package
-cd ../install
+echo "cd $DYNDOC_HOME/install"
+cd $DYNDOC_HOME/install
+
+echo "install rb4R R package"
+mkdir -p R;cd R
 git clone https://github.com/rcqls/rb4R.git
 R CMD INSTALL rb4R
-echo install atom packages 
+cd ..
+
+echo "install atom packages"
+mkdir -p share;cd share
 git clone https://github.com/rcqls/dyndoc-syntax.git
 git clone https://github.com/rcqls/atom-dyndoc-viewer.git
 apm link dyndoc-syntax/atom/language-dyndoc
 apm link atom-dyndoc-viewer
+cd ..
 
