@@ -81,10 +81,22 @@ else
 fi
 
 echo "install dyndoc dependencies"
-bundle install
+#bundle install
+gem install configliere --no-ri --no-rdoc
+gem install ultraviolet --no-ri --no-rdoc
 
 echo "cd $DYNDOC_HOME/install"
 cd $DYNDOC_HOME/install
+
+echo "install ruby R4rb, dyndoc-ruby-core and dyndoc-ruby-doc gems"
+mkdir -p ruby;cd ruby
+git clone https://github.com/rcqls/R4rb.git
+cd R4rb;rake install
+git clone https://github.com/rcqls/dyndoc-ruby-core.git
+cd dyndoc-ruby-core;rake install
+git clone https://github.com/rcqls/dyndoc-ruby-doc.git
+cd dyndoc-ruby-doc;rake install
+cd ..
 
 echo "install rb4R R package"
 mkdir -p R;cd R
