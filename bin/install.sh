@@ -57,7 +57,7 @@ cp -r ../dyndoc_basic_root_structure/* $DYNDOC_HOME
 mkdir -p $DYNDOC_HOME/install
 if [ "$(gem which bundler)" = "" ]; then
 	echo install bundler gem
-	gem install bundler --no-ri --no-rdoc
+	gem install bundler --no-ri --no-rdoc --user-install
 fi
 
 echo "check bundle in PATH"
@@ -82,8 +82,8 @@ fi
 
 echo "install dyndoc dependencies"
 #bundle install
-gem install configliere --no-ri --no-rdoc
-gem install ultraviolet --no-ri --no-rdoc
+gem install configliere --no-ri --no-rdoc --user-install
+gem install ultraviolet --no-ri --no-rdoc --user-install
 
 echo "cd $DYNDOC_HOME/install"
 cd $DYNDOC_HOME/install
