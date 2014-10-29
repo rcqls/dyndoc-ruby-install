@@ -1,0 +1,5 @@
+gem 'configliere'
+gem 'ultraviolet'
+gem 'R4rb', :git => 'https://github.com/rcqls/R4rb.git'
+gem 'dyndoc-ruby-core', :git => 'https://github.com/rcqls/dyndoc-ruby-core.git'
+gem 'dyndoc-ruby-doc', :git => 'https://github.com/rcqls/dyndoc-ruby-doc.git'

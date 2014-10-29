@@ -1,0 +1,45 @@
+# Dyndoc
+
+## Basic requirements
+
+### MacOSX
+1. ruby: xcode provides one and homebrew is based on ruby.
+2. [homebrew](http://brew.sh) (optional)
+* [R](http://cran.r-project.org/bin/macosx/)
+* [latex (MacTex)](http://www.tug.org/mactex/)
+* [pandoc](https://github.com/jgm/pandoc/releases)
+* git: brew install git (if homebrew option)
+
+### Windows
+1. [msys2](http://msys2.github.io)
+* ruby: pacman -S ruby (msys version)
+* [R](http://cran.r-project.org/bin/windows/base/)
+* latex (with pdflatex in PATH) : [MikTex](http:/miktex.org)
+* [pandoc](https://github.com/jgm/pandoc/releases)
+* git: pacman -S git
+
+Note: other alternative could be [rubyinstaller](http://rubyinstaller.org) with [devkit](http://rubyinstaller.org/add-ons/devkit) (no more investigated in this project).
+
+### Linux
+There are many distributions but mainly all of them provide the following:
+
+1. ruby (>=2.0): ruby-dev (or similar) is usually required.
+* R (>=3.0): r-base-dev (or similar) is usually required.
+* latex (texlive for example)
+* pandoc
+* git
+
+## Installation steps
+
+1. R4rb, dyndoc-ruby-core and dyndoc-ruby-doc gems:
+  * gem install bundler
+  * cd [temporary directory]
+  * git clone https://github.com/rcqls/dyndoc-ruby-install.git
+  * cd dyndoc-ruby-install
+  * bundle install
+* rb4R and dyndoc R packages:
+* Initialisation step
+* Optional integration with atom:
+  1.  [atom](https://github.com/atom/atom/releases) editor
+  * atom-language-dyndoc
+  * atom-dyndoc-viewer
