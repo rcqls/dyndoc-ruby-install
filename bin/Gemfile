@@ -1,3 +1,4 @@
+source 'https://rubygems.org'
 gem 'configliere'
 gem 'ultraviolet'
 gem 'R4rb', :git => 'https://github.com/rcqls/R4rb.git'
