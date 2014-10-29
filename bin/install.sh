@@ -96,10 +96,9 @@ echo "install atom packages"
 mkdir -p share;cd share
 git clone https://github.com/rcqls/dyndoc-syntax.git
 git clone https://github.com/rcqls/atom-dyndoc-viewer.git
-cd atom-dyndoc-viewer
-apm install
-cd ..
 apm link dyndoc-syntax/atom/language-dyndoc
 apm link atom-dyndoc-viewer
-cd ..
+cd atom-dyndoc-viewer
+apm install;apm rebuild
+cd ../..
 
