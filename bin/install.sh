@@ -51,7 +51,6 @@ else
 fi
 
 echo copy dyndoc home directory
-mkdir -p $DYNDOC_HOME
 if [ -d $DYNDOC_HOME ] 
 then
 	read -p "$DYNDOC_HOME already exists, do you want to copy anyway [Y/N]" -n 1 -r
@@ -60,7 +59,11 @@ then
 else
 	ans="ok"
 fi
-if [ "ans" = "ok" ]; then cp -r ../dyndoc_basic_root_structure/* $DYNDOC_HOME; fi
+if [ "ans" = "ok" ]
+then 
+	mkdir -p $DYNDOC_HOME
+	cp -r ../dyndoc_basic_root_structure/* $DYNDOC_HOME
+fi
 
 mkdir -p $DYNDOC_HOME/install
 if [ "$(gem which bundler)" = "" ]; then
