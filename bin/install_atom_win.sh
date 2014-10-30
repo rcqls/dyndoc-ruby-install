@@ -2,6 +2,8 @@
 
 DYNDOC_HOME=~/dyndoc
 
+SCRIPTPATH=$( cd $(dirname $0) ; pwd -P )
+
 prevdir=$(pwd)
 
 if [[ $(uname) =~ ^(MSYS) ]]
@@ -44,13 +46,12 @@ then
 		echo " -> skipped!"
 	fi
 
-	read -p "Do you want to install atom packages [Y/N]" -n 1 -r
+	read -p "Do you want to install atom packages now in MINGW console? [Y/N]" -n 1 -r
 	echo
-	echo "atom "
 	if [[ "$REPLY" =~ ^[Yy]$ ]]
 	then
-		msys_root=$(ruby -e "print ENV['WD'].split('\\')[0...-2].join(File::Separator)")
-		$msys_root/mingw32_shell.bat ./install_atom_dyndoc.sh || $msys_root/mingw64_shell.bat ./install_atom_dyndoc.sh
+		msys_root=$(ruby -e "print ENV['WD'].split('\\\\')[0...-2].join(File::Separator)")
+		$msys_root/mingw32_shell.bat $SCRIPTPATH/install_atom_dyndoc.sh
 	fi
 
 fi
