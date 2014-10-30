@@ -1,7 +1,15 @@
 #!/bin/bash
 DYNDOC_HOME=~/dyndoc
 
+
 prevdir=$(pwd)
+
+SCRIPTPATH=$( cd $(dirname $0) ; pwd -P )
+
+exit
+
+cd $prevdir
+
 echo "check git in PATH"
 if [ "$(which git)" = "" ]; then
 	echo "git is not installed!" 
@@ -46,7 +54,7 @@ fi
 if [ "$ans" = "ok" ]
 then 
 	mkdir -p $DYNDOC_HOME
-	cp -r ../dyndoc_basic_root_structure/* $DYNDOC_HOME
+	cp -r $SCRIPTPATH/../dyndoc_basic_root_structure/* $DYNDOC_HOME
 fi
 
 mkdir -p $DYNDOC_HOME/install
