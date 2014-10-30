@@ -52,7 +52,15 @@ fi
 
 echo copy dyndoc home directory
 mkdir -p $DYNDOC_HOME
-cp -r ../dyndoc_basic_root_structure/* $DYNDOC_HOME
+if [ -d $DYNDOC_HOME ] 
+then
+	read -p "$DYNDOC_HOME already exists, do you want to copy anyway [Y/N]" -n 1 -r
+	echo 
+	if [[ "$REPLAY" = "Y" ]]; then ans="ok"; else ans=""; fi
+else
+	ans="ok"
+fi
+if [ "ans" = "ok" ]; then cp -r ../dyndoc_basic_root_structure/* $DYNDOC_HOME; fi
 
 mkdir -p $DYNDOC_HOME/install
 if [ "$(gem which bundler)" = "" ]; then
@@ -65,15 +73,15 @@ if [ "$(which bundle)" = "" ]; then
 	echo "bundle is not installed!"
  	read -p "Add `ruby -e 'print Gem.user_dir'`/bin to PATH? [1=~/.bash_profile, 2=~/.profile, 3=~/.bashrc, *=No]" -n 1 -r
 	echo    # (optional) move to a new line
-	rcFile = case "$REPLY" in
-	"1")
-    .bash_profile
+	case "$REPLY" in
+	1)
+    	rcFile=".bash_profile"
     ;;
-	"2")
-	.profile
+	2)
+		rcFile=".profile"
     ;;
- 	"3")
-	.bashrc
+ 	3)
+		rcFile=".bashrc"
     ;;
 	*)
     ""
@@ -95,7 +103,6 @@ esac
 else
 	echo ok
 fi
-
 
 echo "install dyndoc dependencies"
 #bundle install
