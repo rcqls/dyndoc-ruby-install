@@ -3,7 +3,8 @@
 DYNDOC_HOME=~/dyndoc
 
 prevdir=$(pwd)
-if [[ $(uname) =~ ^(MSYS|MINGW) ]]
+
+if [[ $(uname) =~ ^(MSYS) ]]
 then
 	read -p "Do you want to install atom editor in $DYNDOC_HOME/install [Y/N]" -n 1 -r
 	echo
@@ -36,55 +37,23 @@ then
 	then
 		rcFile=".bash_profile"
 		echo "## added automatically when installing dyndoc ruby" >>  ${HOME}/${rcFile}
-		echo "export PATH=$DYNDOC_HOME/install/Atom:$DYNDOC_HOME/install/Atom/resources/app/apm/node_modules/atom-package-manager/bin:$PATH" >> ${HOME}/${rcFile}
+		echo "export PATH=\"$DYNDOC_HOME/install/Atom:$DYNDOC_HOME/install/Atom/resources/app/apm/node_modules/atom-package-manager/bin:$PATH\"" >> ${HOME}/${rcFile}
 		. ${HOME}/${rcFile}
 		echo " -> done!"
 	else
 		echo " -> skipped!"
 	fi
 
-fi
-
-
-echo "check atom in PATH"
-if [ "$(which atom)" = "" ]; then
-	echo "atom is needed to complete the installation!" 
- 	exit
-else
-	echo ok
-fi
-
-echo "check apm in PATH"
-if [ "$(which apm)" = "" ]; then
-	echo "apm is needed to complete the installation!" 
- 	exit
-else
-	echo ok
-fi
-
-
-
-read -p "Do you want to install (dyndoc) atom packages [Y/N]" -n 1 -r
-echo
-echo "install atom packages "
-if [[ "$REPLY" =~ ^[Yy]$ ]]
-then
-	if [[ $MSYSTEM =~ ^MSYS ]]; then
-		echo "Open this script inside a MINGW console!"
-		exit
+	read -p "Do you want to install atom packages [Y/N]" -n 1 -r
+	echo
+	echo "atom "
+	if [[ "$REPLY" =~ ^[Yy]$ ]]
+	then
+		msys_root=$(ruby -e "print ENV['WD'].split('\\')[0...-2].join(File::Separator)")
+		$msys_root/mingw32_shell.bat ./install_atom_dyndoc.sh || $msys_root/mingw64_shell.bat ./install_atom_dyndoc.sh
 	fi
-	mkdir -p $DYNDOC_HOME/install/share
-	cd $DYNDOC_HOME/install/share
-	git clone https://github.com/rcqls/dyndoc-syntax.git
-	git clone https://github.com/rcqls/atom-dyndoc-viewer.git
-	apm link dyndoc-syntax/atom/language-dyndoc
-	apm link atom-dyndoc-viewer
-	cd atom-dyndoc-viewer
-	apm install;apm rebuild
-	apm install language-r
-	echo " -> done!"
-else
-	echo " -> skipped!"
+
 fi
+
 
 cd $prevdir
