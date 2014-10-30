@@ -63,22 +63,39 @@ fi
 echo "check bundle in PATH"
 if [ "$(which bundle)" = "" ]; then
 	echo "bundle is not installed!"
- 	read -p "Add `ruby -e 'print Gem.user_dir'`/bin to PATH in ~/.bash_profile? [Y/N]" -n 1 -r
+ 	read -p "Add `ruby -e 'print Gem.user_dir'`/bin to PATH? [1=~/.bash_profile, 2=~/.profile, 3=~/.bashrc, *=No]" -n 1 -r
 	echo    # (optional) move to a new line
-	if [[ $REPLY =~ ^[Yy]$ ]]
+	rcFile = case "$REPLY" in
+	"1")
+    .bash_profile
+    ;;
+	"2")
+	.profile
+    ;;
+ 	"3")
+	.bashrc
+    ;;
+	*)
+    ""
+    ;;
+esac
+	if [[ "${rcFile}" != "" ]]
 	then
-		echo "## added automatically when installing dyndoc ruby" >>  ${HOME}/.bash_profile
-		echo `cat bash_profile` >> ${HOME}/.bash_profile
-		. ${HOME}/.bash_profile
+		echo "## added automatically when installing dyndoc ruby" >>  ${HOME}/${rcFile}
+		echo `cat bash_profile` >> ${HOME}/${rcFile}
+		. ${HOME}/${rcFile}
 	fi
-fi
-echo "recheck bundle in PATH"
-if [ "$(which bundle)" = "" ]; then
-	echo "bundle is not installed!" 
- 	exit
+	echo "recheck bundle in PATH"
+	if [ "$(which bundle)" = "" ]; then
+		echo "bundle is not installed!" 
+	 	exit
+	else
+		echo ok
+	fi
 else
 	echo ok
 fi
+
 
 echo "install dyndoc dependencies"
 #bundle install
