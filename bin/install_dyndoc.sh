@@ -1,6 +1,7 @@
 #!/bin/bash
 DYNDOC_HOME=~/dyndoc
 
+prevdir=$(pwd)
 echo "check git in PATH"
 if [ "$(which git)" = "" ]; then
 	echo "git is not installed!" 
@@ -95,22 +96,24 @@ echo "install dyndoc dependencies"
 gem install configliere --no-ri --no-rdoc --user-install
 gem install ultraviolet --no-ri --no-rdoc --user-install
 
-echo "cd $DYNDOC_HOME/install"
-cd $DYNDOC_HOME/install
 
 echo "install ruby stuff: R4rb, dyndoc-ruby-core and dyndoc-ruby-doc gems"
-mkdir -p ruby;cd ruby
+mkdir -p $DYNDOC_HOME/install/ruby
+cd $DYNDOC_HOME/install/ruby
 git clone https://github.com/rcqls/R4rb.git
 cd R4rb;rake install
+cd $DYNDOC_HOME/install/ruby
 git clone https://github.com/rcqls/dyndoc-ruby-core.git
 cd dyndoc-ruby-core;rake install
+cd $DYNDOC_HOME/install/ruby
 git clone https://github.com/rcqls/dyndoc-ruby-doc.git
 cd dyndoc-ruby-doc;rake install
-cd ..
 
 echo "install R stuff: rb4R R package"
-mkdir -p R;cd R
+mkdir -p $DYNDOC_HOME/install/R
+cd $DYNDOC_HOME/install/R
 git clone https://github.com/rcqls/rb4R.git
 R CMD INSTALL rb4R
-cd ..
+
+cd ${prevdir}
 
