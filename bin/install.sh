@@ -50,16 +50,17 @@ else
 	echo ok
 fi
 
+
 echo copy dyndoc home directory
 if [ -d $DYNDOC_HOME ] 
 then
 	read -p "$DYNDOC_HOME already exists, do you want to copy anyway [Y/N]" -n 1 -r
 	echo 
-	if [[ "$REPLAY" = "Y" ]]; then ans="ok"; else ans=""; fi
+	if [[ "$REPLY" =~ ^[Yy]$ ]]; then ans="ok"; else ans=""; fi
 else
 	ans="ok"
 fi
-if [ "ans" = "ok" ]
+if [ "$ans" = "ok" ]
 then 
 	mkdir -p $DYNDOC_HOME
 	cp -r ../dyndoc_basic_root_structure/* $DYNDOC_HOME
