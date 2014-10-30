@@ -6,8 +6,6 @@ prevdir=$(pwd)
 
 SCRIPTPATH=$( cd $(dirname $0) ; pwd -P )
 
-exit
-
 cd $prevdir
 
 echo "check git in PATH"
