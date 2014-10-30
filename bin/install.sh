@@ -112,5 +112,6 @@ apm link dyndoc-syntax/atom/language-dyndoc
 apm link atom-dyndoc-viewer
 cd atom-dyndoc-viewer
 apm install;apm rebuild
+apm install language-r
 cd ../..
 
