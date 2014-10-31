@@ -24,6 +24,14 @@ else
 	echo ok
 fi
 
+echo "check gem in PATH"
+if [ "$(which gem)" = "" ]; then
+	echo "gem is not installed!" 
+ 	exit
+else
+	echo ok
+fi
+
 echo "check R in PATH"
 if [ "$(which R)" = "" ]; then
 	echo "R is not installed!" 
@@ -32,9 +40,9 @@ else
 	echo ok
 fi
 
-echo "check gem in PATH"
-if [ "$(which gem)" = "" ]; then
-	echo "gem is not installed!" 
+echo "check pandoc in PATH"
+if [ "$(which pandoc)" = "" ]; then
+	echo "pandoc is not installed!" 
  	exit
 else
 	echo ok
