@@ -84,7 +84,7 @@ if [ "$(which bundle)" = "" ]; then
 	if [[ "${rcFile}" != "" ]]
 	then
 		echo "## added automatically when installing dyndoc ruby" >>  ${HOME}/${rcFile}
-		echo `cat bash_profile` >> ${HOME}/${rcFile}
+		echo `cat $SCRIPTPATH/bash_profile` >> ${HOME}/${rcFile}
 		. ${HOME}/${rcFile}
 	fi
 	echo "recheck bundle in PATH"
