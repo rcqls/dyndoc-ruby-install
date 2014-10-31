@@ -40,6 +40,36 @@ else
 	echo ok
 fi
 
+echo "check make in PATH"
+if [ "$(which make)" = "" ]; then
+	if [[ $(uname) =~ ^(MSYS) ]]
+	then
+		echo "install make" 
+ 		pacman -S --noconfirm make
+ 		echo ok
+ 	else
+ 		echo "make is not installed!" 
+ 		exit
+ 	fi
+else
+	echo ok
+fi
+
+echo "check gcc in PATH"
+if [ "$(which gcc)" = "" ]; then
+	if [[ $(uname) =~ ^(MSYS) ]]
+	then
+		echo "install gcc" 
+ 		pacman -S --noconfirm make
+ 		echo ok
+ 	else
+ 		echo "gcc is not installed!" 
+ 		exit
+ 	fi
+else
+	echo ok
+fi
+
 echo "copy dyndoc home directory"
 if [ -d $DYNDOC_HOME ] 
 then
