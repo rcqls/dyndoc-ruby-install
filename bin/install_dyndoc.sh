@@ -34,7 +34,7 @@ fi
 
 echo "check R in PATH"
 if [ "$(which R)" = "" ]; then
-	echo "R is not installed!" 
+	echo "R is not installed or in the PATH!" 
  	exit
 else
 	echo ok
@@ -42,7 +42,7 @@ fi
 
 echo "check pandoc in PATH"
 if [ "$(which pandoc)" = "" ]; then
-	echo "pandoc is not installed!" 
+	echo "pandoc is not installed or in the PATH!" 
  	exit
 else
 	echo ok
