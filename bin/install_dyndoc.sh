@@ -137,6 +137,12 @@ echo "install ruby stuff: R4rb, dyndoc-ruby-core and dyndoc-ruby-doc gems"
 mkdir -p $DYNDOC_HOME/install/ruby
 cd $DYNDOC_HOME/install/ruby
 git clone https://github.com/rcqls/R4rb.git
+if [[ $(uname) =~ ^(MSYS) ]]
+then
+	echo "install R4rb dependencies" 
+	pacman -S --noconfirm libcrypt-devel gmp-devel
+	echo ok
+fi
 cd R4rb;rake install
 cd $DYNDOC_HOME/install/ruby
 git clone https://github.com/rcqls/dyndoc-ruby-core.git
