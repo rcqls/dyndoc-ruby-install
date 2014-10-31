@@ -11,7 +11,7 @@
 * git: brew install git (if homebrew option)
 
 ### Windows
-1. [msys2](http://msys2.github.io)
+1. [MSYS2](http://msys2.github.io)
 * ruby: pacman -S ruby (msys version)
 * [R](http://cran.r-project.org/bin/windows/base/)
 * latex (with pdflatex in PATH) : [MikTex](http:/miktex.org)
@@ -31,15 +31,18 @@ There are many distributions but mainly all of them provide the following:
 
 ## Installation steps
 
-1. R4rb, dyndoc-ruby-core and dyndoc-ruby-doc gems:
-  * gem install bundler
-  * cd [temporary directory]
-  * git clone https://github.com/rcqls/dyndoc-ruby-install.git
-  * cd dyndoc-ruby-install
-  * bundle install
-* rb4R and dyndoc R packages:
-* Initialisation step
-* Optional integration with atom:
-  1.  [atom](https://github.com/atom/atom/releases) editor
-  * atom-language-dyndoc
-  * atom-dyndoc-viewer
+The dyndoc-ruby installation is broken into 3 parts main parts:
+
+1. ruby gems: R4rb, dyndoc-ruby-core and dyndoc-ruby-doc
+* R package: rb4R
+* [atom](https://github.com/atom/atom/releases) editor package: language-dyndoc (see dyndoc-syntax), atom-dyndoc-viewer
+
+All these steps are more easily done as follows:
+
+1. Open a terminal (msys2_shell.bat for Windows users, not the Mingw one)
+* cd [temporary directory newly created]
+* git clone https://github.com/rcqls/dyndoc-ruby-install.git
+* cd dyndoc-ruby-install
+* ./bin/install_dyndoc.sh
+  * Windows system (MSYS2): ./bin/install_atom_win.sh
+  * Other system: ./bin/install_atom_dyndoc.sh

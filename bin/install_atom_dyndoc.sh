@@ -20,8 +20,6 @@ else
 	echo ok
 fi
 
-
-
 read -p "Do you want to install (dyndoc) atom packages [Y/N]" -n 1 -r
 echo
 echo "install atom packages "
