@@ -60,7 +60,7 @@ if [ "$(which gcc)" = "" ]; then
 	if [[ $(uname) =~ ^(MSYS) ]]
 	then
 		echo "install gcc" 
- 		pacman -S --noconfirm make
+ 		pacman -S --noconfirm gcc
  		echo ok
  	else
  		echo "gcc is not installed!" 
