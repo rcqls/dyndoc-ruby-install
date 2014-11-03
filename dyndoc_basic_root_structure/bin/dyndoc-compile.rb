@@ -22,9 +22,12 @@ OptionParser.new do |opts|
     cmd << :view if c.include? "v"
     cmd << :save << :view if c.include? "x"
     cmd =[:cat] if cmd.empty? #and  cfg_dyn[:model_doc]=="content"
-    Settings["cfg_dyn.cmd_doc"] = cmd
-  
+    Settings["cfg_dyn.cmd_doc"] = cmd 
   }
+
+  opts.on("-l", "--list", "list of documents available") do
+    Settings["cfg_dyn.cmd_doc"] = [:list]
+  end
 
 end.parse!
 
