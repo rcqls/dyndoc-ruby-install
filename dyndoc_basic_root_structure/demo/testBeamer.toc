@@ -1,0 +1,4 @@
+\beamer@endinputifotherversion {3.20pt}
+\beamer@sectionintoc {1}{Motivation}{2}{0}{1}
+\beamer@sectionintoc {2}{D\IeC {\'e}mo}{14}{0}{2}
+\beamer@sectionintoc {3}{Modes d'utilisation}{17}{0}{3}

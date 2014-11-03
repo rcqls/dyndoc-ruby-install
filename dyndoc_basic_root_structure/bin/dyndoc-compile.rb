@@ -13,7 +13,7 @@ OptionParser.new do |opts|
   end
 
   opts.on('-c', '--cmd COMMAND','[s(ave)][b(ackup)][c(at)][pdf|png][v(iew)] and x=sv') {|c|
-    cmd =[]
+    cmd =[:make_content]
     cmd << :save if c.include? "s"
     cmd << :backup if c.include? "b"
     cmd << :cat if c.include? "c"
@@ -22,6 +22,7 @@ OptionParser.new do |opts|
     cmd << :view if c.include? "v"
     cmd << :save << :view if c.include? "x"
     cmd =[:cat] if cmd.empty? #and  cfg_dyn[:model_doc]=="content"
+    cmd = [:pdf] if c=="pdf" #only pdflatex
     Settings["cfg_dyn.cmd_doc"] = cmd 
   }
 
