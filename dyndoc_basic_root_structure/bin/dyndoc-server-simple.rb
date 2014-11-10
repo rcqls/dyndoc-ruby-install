@@ -18,6 +18,7 @@ module Dyndoc
       unless @tmpl_mngr
         Dyndoc.cfg_dyn['dyndoc_session']=:interactive
         @tmpl_mngr = Dyndoc::Ruby::TemplateManager.new({})
+        ##is it really well-suited for interactive mode???
         @tmpl_mngr.init_doc({:format_output=> "html"})
         puts "InteractiveServer initialized!\n"
       end

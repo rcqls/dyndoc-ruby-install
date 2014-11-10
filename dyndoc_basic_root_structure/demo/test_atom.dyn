@@ -43,10 +43,10 @@
   #alert "go button pushed"
   @dyn2.render {#dyn>]
     |[#md>] toto2
-    |[#R>>]rnorm(#{@sel.val()})
+    |[#R>>](y<-rnorm(#{@sel.val()}))
     |log(-1)
     |a<-c(1,3,2)
-    |[#>]{#rsvg]plot(rnorm(10))[#}
+    |[#>]{#rsvg]plot(y)[#}
   [#dyn>}
 
 @go3.click =>

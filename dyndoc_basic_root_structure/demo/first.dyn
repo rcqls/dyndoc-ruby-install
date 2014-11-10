@@ -4,12 +4,9 @@ TODO: DESCRIPTION
 
 ## Install
 
-
 [#txtl>]h1. test
 
-
 [#rb<]p Dyndoc.cfg_dyn[:root_doc]
-
 
 [#rb<]nn=15;n2=3
 (1..10).map do |i| #
@@ -37,3 +34,6 @@ for(i in 1:5) {
 	{#>]eltR:r{i}\\[#>}
 	a<-1
 }
+
+
+[#>]{#rsvg]plot(rnorm(10))[#}
