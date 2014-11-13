@@ -12,10 +12,13 @@ OptionParser.new do |opts|
     Settings["cfg_dyn.doc_list"] = list
   end
 
-  opts.on('-c', '--cmd COMMAND','[s(ave)][b(ackup)][c(at)][pdf|png][v(iew)] and x=sv') {|c|
+  opts.on("--content-only", "content only mode (no header!)") do
+    Settings["cfg_dyn.model_doc"] = "Content"
+  end
+
+  opts.on('-c', '--cmd COMMAND','[s(ave)][c(at)][pdf|png][v(iew)] and x=sv') {|c|
     cmd =[:make_content]
     cmd << :save if c.include? "s"
-    cmd << :backup if c.include? "b"
     cmd << :cat if c.include? "c"
     cmd << :pdf if c.include? "pdf"
     cmd << :png if c.include? "png"
