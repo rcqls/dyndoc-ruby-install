@@ -12,7 +12,9 @@ OptionParser.new do |opts|
     Settings["cfg_dyn.doc_list"] = list
   end
 
-  opts.on("--content-only", "content only mode (no header!)") do
+  opts.on('-t','--tags TAGS',Array,'filter tags') {|t| Settings["cfg_dyn.tag_tmpl"] = t}
+
+  opts.on('-C',"--content-only", "content only mode (no header!)") do
     Settings["cfg_dyn.model_doc"] = "Content"
   end
 
