@@ -22,7 +22,9 @@ OptionParser.new do |opts|
     cmd =[:make_content]
     cmd << :save if c.include? "s"
     cmd << :cat if c.include? "c"
-    cmd << :pdf if c.include? "pdf"
+    cmd << :pdf  if c =~ /(E)?pdf([1-3])?/ #if c.include? "pdf"
+    Settings["cfg_dyn.options.pdflatex_echo"]=true if $1
+    Settings["cfg_dyn.options.pdflatex_nb_pass"]=$2.to_i if $2
     cmd << :png if c.include? "png"
     cmd << :view if c.include? "v"
     cmd << :save << :view if c.include? "x"
