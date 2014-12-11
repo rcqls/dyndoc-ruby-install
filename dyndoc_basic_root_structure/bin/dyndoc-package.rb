@@ -28,11 +28,19 @@ FileUtils.cd File.join(repo_dir,ARGV[1])
 `git pull`
 
 # dyndoc-package link rcqls/dyndoc-share/library/RCqls (default to RCqls)
-# dyndoc-package link rcqls/dyndoc-share/library/RCqls rcqls
+# dyndoc-package link rcqls/dyndoc-share/library/RCqls RCqls
+# dyndoc-package link <real local path to expand>
 when :link
-path,package = File.split(ARGV[1])
+path = File.expand_path(ARGV[1])
+unless (local = (File.directory? path) )
+	path = ARGV[1] # not expanded
+end
+path,package = File.split(path)
 target = ARGV[2] || package
-FileUtils.ln_sf File.join(repo_dir,path,package),File.join(lib_dir,target)
+target = File.join(lib_dir,target)
+FileUtils.rm target if File.symlink? target #unlink first
+source = local ? path : File.join(repo_dir,path,package)
+FileUtils.ln_sf source,target
 
 # dyndoc-package unlink RCqls
 when :unlink
