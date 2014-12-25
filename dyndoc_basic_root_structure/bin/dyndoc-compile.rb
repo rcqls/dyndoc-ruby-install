@@ -12,6 +12,10 @@ OptionParser.new do |opts|
     Settings["cfg_dyn.doc_list"] = list
   end
 
+  opts.on("-f", "--format ", "format of the dyndoc document") do |format|
+    Settings["cfg_dyn.format_doc"] = format
+  end
+
   opts.on('-t','--tags TAGS',Array,'filter tags') {|t| Settings["cfg_dyn.tag_tmpl"] = t}
 
   opts.on('-C',"--content-only", "content only mode (no header!)") do

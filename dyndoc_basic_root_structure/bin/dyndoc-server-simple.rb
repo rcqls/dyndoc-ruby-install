@@ -1,4 +1,4 @@
-#!ruby
+#!/usr/bin/ruby
 
 require 'socket'                # Get sockets from stdlib
 require "dyndoc-core"
