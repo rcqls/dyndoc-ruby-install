@@ -5,8 +5,8 @@ require 'dyndoc/init/home'
 dyndoc_home = Dyndoc.home
 #p Dyndoc.home
 
-lib_dir = File.join(dyndoc_home,"library")
-repo_dir = File.join(dyndoc_home,"library",".repository")
+lib_dir = ENV["DYNDOC_LIBRARY"] || File.join(dyndoc_home,"library")
+repo_dir = File.join(lib_dir,".repository")
 
 old_pwd = Dir.pwd
 
