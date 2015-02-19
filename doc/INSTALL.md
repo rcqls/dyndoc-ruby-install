@@ -49,3 +49,8 @@ All these steps are more easily done as follows:
 * ./bin/install_dyndoc.sh
   * Windows system (MSYS2): ./bin/install_atom_win.sh
   * Other system: ./bin/install_atom_dyndoc.sh
+
+## FAQ
+
+1. In msys2, sometimes you need to launch a "/c/msys2/autorebase.bat" when child links fail.
+* Add R in the PATH (in .bash_profile or in the environment windows variable PATH) 
