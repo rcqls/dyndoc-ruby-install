@@ -8,6 +8,7 @@
 * [R](http://cran.r-project.org/bin/macosx/)
 * [latex (MacTex)](http://www.tug.org/mactex/)
 * [pandoc](https://github.com/jgm/pandoc/releases)
+* [Ttm](http://hutchinson.belmont.ma.us/tth/mml) from source
 * git: brew install git (if homebrew option)
 
 ### Windows
@@ -16,6 +17,7 @@
 * [R](http://cran.r-project.org/bin/windows/base/)
 * latex (with pdflatex in PATH) : [MikTex](http:/miktex.org)
 * [pandoc](https://github.com/jgm/pandoc/releases)
+* [Ttm](http://hutchinson.belmont.ma.us/tth/mml)
 * git: pacman -S git
 
 Note: other alternative could be [rubyinstaller](http://rubyinstaller.org) with [devkit](http://rubyinstaller.org/add-ons/devkit) (no more investigated in this project).
@@ -27,6 +29,7 @@ There are many distributions but mainly all of them provide the following:
 * R (>=3.0): r-base-dev (or similar) is usually required.
 * latex (texlive for example)
 * pandoc
+* [Ttm](http://hutchinson.belmont.ma.us/tth/mml) from source
 * git
 
 ## Installation steps

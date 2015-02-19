@@ -40,7 +40,7 @@ then
 		rcFile=".bash_profile"
 		echo >>  ${HOME}/${rcFile}
 		echo "## added automatically when installing dyndoc ruby" >>  ${HOME}/${rcFile}
-		echo "export PATH=\"$DYNDOC_HOME/install/Atom:$DYNDOC_HOME/install/Atom/resources/app/apm/node_modules/atom-package-manager/bin:\$PATH\"" >> ${HOME}/${rcFile}
+		echo "export PATH=\"$DYNDOC_HOME/install/Atom:$DYNDOC_HOME/install/Atom/resources/app/apm/bin:\$PATH\"" >> ${HOME}/${rcFile}
 		. ${HOME}/${rcFile}
 		echo " -> done!"
 	else
