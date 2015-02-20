@@ -54,3 +54,4 @@ All these steps are more easily done as follows:
 
 1. In msys2, sometimes you need to launch a "/c/msys2/autorebase.bat" when child links fail.
 * Add R in the PATH (in .bash_profile or in the environment windows variable PATH) 
+* R_LIBS_USER can be added in your .bash_profile to install locally rb4R R package

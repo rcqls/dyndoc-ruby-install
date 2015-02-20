@@ -164,6 +164,7 @@ mkdir -p $DYNDOC_HOME/install/R
 cd $DYNDOC_HOME/install/R
 git clone https://github.com/rcqls/rb4R.git
 PREFIX_R=""
+## specific treatment for MSYS system
 if [[ $(uname) =~ ^(MSYS) ]]; then
 	mkdir -p library
 	echo  "export R_LIBS_USER=$DYNDOC_HOME/install/R/library" >> ${HOME}/.bash_profile
