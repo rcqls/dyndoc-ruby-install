@@ -34,7 +34,7 @@ fi
 
 echo "check R in PATH"
 if [ "$(which R)" = "" ]; then
-	echo "R is not installed or in the PATH!" 
+	echo "R is not installed or in the PATH!"
  	exit
 else
 	echo ok
@@ -163,7 +163,16 @@ echo "install R stuff: rb4R R package"
 mkdir -p $DYNDOC_HOME/install/R
 cd $DYNDOC_HOME/install/R
 git clone https://github.com/rcqls/rb4R.git
-R CMD INSTALL rb4R
+PREFIX_R=""
+if [[ $(uname) =~ ^(MSYS) ]]; then
+	mkdir -p library
+	echo  "export R_LIBS_USER=$DYNDOC_HOME/install/R/library" >> ${HOME}/.bash_profile
+	echo "Warning: export R_LIBS_USER=$DYNDOC_HOME/install/R/library added in .bash_profile"
+fi
+if [ "$R_LIBS_USER" != ""  ]; then
+	PREFIX_R="-l $R_LIBS_USER"
+fi
+R CMD INSTALL $PREFIX_R rb4R
 
 cd ${prevdir}
 
