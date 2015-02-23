@@ -91,6 +91,8 @@ if [ "$ans" = "ok" ]
 then 
 	mkdir -p $DYNDOC_HOME
 	cp -r $SCRIPTPATH/../dyndoc_basic_root_structure/* $DYNDOC_HOME
+	ln -s $DYNDOC_HOME/bin/dyndoc-compile.rb $DYNDOC_HOME/bin/dyn
+	ln -s $DYNDOC_HOME/bin/dyndoc-package.rb $DYNDOC_HOME/bin/dpm
 fi
 
 mkdir -p $DYNDOC_HOME/install
