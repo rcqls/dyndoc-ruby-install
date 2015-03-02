@@ -1,5 +1,3 @@
-Slider = require(fs.absolute("~/.atom/packages/atom-dyndoc-addons/lib/spacepen-extension"))
-
 {#atomClass]SpaceCraft[#extends]ScrollView
 [#view]
 @div tabindex: -1, style: "background-color: blue;color: white;overflow: scroll", =>
