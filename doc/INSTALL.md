@@ -26,6 +26,7 @@ Note: other alternative could be [rubyinstaller](http://rubyinstaller.org) with 
 There are many distributions but mainly all of them provide the following:
 
 1. ruby (>=2.0): ruby-dev (or similar) is usually required.
+For ubuntu, if the default ruby version is lower than 2.0, install ruby2 and ruby-switch (using update-alternatives).
 * R (>=3.0): r-base-dev (or similar) is usually required.
 * latex (texlive for example)
 * pandoc
