@@ -146,7 +146,7 @@ gem install ultraviolet --no-ri --no-rdoc --user-install
 echo "install ruby stuff: R4rb, dyndoc-ruby-core and dyndoc-ruby-doc gems"
 mkdir -p $DYNDOC_HOME/install/ruby
 cd $DYNDOC_HOME/install/ruby
-git clone https://github.com/rcqls/R4rb.git
+git clone git://github.com/rcqls/R4rb.git
 if [[ $(uname) =~ ^(MSYS) ]]
 then
 	echo "install R4rb dependencies" 
@@ -155,16 +155,16 @@ then
 fi
 cd R4rb;rake install
 cd $DYNDOC_HOME/install/ruby
-git clone https://github.com/rcqls/dyndoc-ruby-core.git
+git clone git://github.com/rcqls/dyndoc-ruby-core.git
 cd dyndoc-ruby-core;rake install
 cd $DYNDOC_HOME/install/ruby
-git clone https://github.com/rcqls/dyndoc-ruby-doc.git
+git clone git://github.com/rcqls/dyndoc-ruby-doc.git
 cd dyndoc-ruby-doc;rake install
 
 echo "install R stuff: rb4R R package"
 mkdir -p $DYNDOC_HOME/install/R
 cd $DYNDOC_HOME/install/R
-git clone https://github.com/rcqls/rb4R.git
+git clone git://github.com/rcqls/rb4R.git
 PREFIX_R=""
 ## specific treatment for MSYS system
 if [[ $(uname) =~ ^(MSYS) ]]; then
