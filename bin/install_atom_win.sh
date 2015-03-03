@@ -25,7 +25,7 @@ then
 		 	pacman -S --noconfirm unzip
 		fi
 		lastversion=$(ruby -ropen-uri -e 'print /v\d*\.\d*\.\d*/.match(open("https://atom.io/releases").read)[0]')
-		wget https://github.com/atom/atom/releases/download/${lastversion}/atom-windows.zip
+		wget --no-check https://github.com/atom/atom/releases/download/${lastversion}/atom-windows.zip
 		unzip atom-windows.zip
 		echo " -> done!"
 	else
