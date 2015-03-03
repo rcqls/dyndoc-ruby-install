@@ -45,7 +45,7 @@ All these steps are more easily done as follows:
 
 1. Open a terminal (msys2_shell.bat for Windows users, not the Mingw one)
 * cd [temporary directory newly created]
-* git clone https://github.com/rcqls/dyndoc-ruby-install.git
+* git clone git://github.com/rcqls/dyndoc-ruby-install.git
 * cd dyndoc-ruby-install
 * ./bin/install_dyndoc.sh
   * Windows system (MSYS2): ./bin/install_atom_win.sh

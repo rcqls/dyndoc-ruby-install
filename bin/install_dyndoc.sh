@@ -48,8 +48,11 @@ else
 	echo ok
 fi
 
-echo "install ca-certificates"
-pacman -S --noconfirm ca-certificates
+if [[ $(uname) =~ ^(MSYS) ]]
+then
+		echo "install ca-certificates"
+		pacman -S --noconfirm ca-certificates
+fi
 
 echo "check make in PATH"
 if [ "$(which make)" = "" ]; then
