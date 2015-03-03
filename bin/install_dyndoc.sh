@@ -48,6 +48,9 @@ else
 	echo ok
 fi
 
+echo "install ca-certificates"
+pacman -S --noconfirm ca-certificates
+
 echo "check make in PATH"
 if [ "$(which make)" = "" ]; then
 	if [[ $(uname) =~ ^(MSYS) ]]
@@ -98,8 +101,6 @@ fi
 mkdir -p $DYNDOC_HOME/install
 if [ "$(gem which bundler)" = "" ]; then
 	echo install bundler gem
-	gem sources -r https://rubygems.org
-	gem sources -a http://rubygems.org
 	gem install bundler --no-ri --no-rdoc --user-install
 fi
 
