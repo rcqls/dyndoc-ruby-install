@@ -24,8 +24,8 @@ then
 			echo "install unzip!" 
 		 	pacman -S --noconfirm unzip
 		fi
-		lastversion=$(ruby -ropen-uri -e 'print /v\d*\.\d*\.\d*/.match(open("http://atom.io/releases").read)[0]')
-		wget http://github.com/atom/atom/releases/download/${lastversion}/atom-windows.zip
+		lastversion=$(ruby -ropen-uri -e 'print /v\d*\.\d*\.\d*/.match(open("https://atom.io/releases").read)[0]')
+		wget https://github.com/atom/atom/releases/download/${lastversion}/atom-windows.zip
 		unzip atom-windows.zip
 		echo " -> done!"
 	else
