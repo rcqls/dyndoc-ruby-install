@@ -17,11 +17,13 @@ brew install git
 
 ### Windows
 * [MSYS2](http://msys2.github.io)
-* complete the msys2 installation with certificates, ruby and git: 
+* complete the msys2 installation with certificates, ruby, git, wget and unzip (copy-paste in msys2_shell the following 5 lines): 
 ```{bash}
-pacman -S ca-certificates
-pacman -S ruby
-pacman -S git
+pacman -S --noconfirm ca-certificates
+pacman -S --noconfirm ruby
+pacman -S --noconfirm git
+pacman -S --noconfirm wget
+pacman -S --noconfirm unzip
 ```
 * [R](http://cran.r-project.org/bin/windows/base/)
 * latex (with pdflatex in PATH) : [MikTex](http:/miktex.org)
@@ -63,7 +65,7 @@ cd dyndoc-ruby-install/bin
 ```
 * Atom editor installation (Linux and MacOSX): install first [atom](https://atom.io) and then
 ```{bash}
-./bin/install_atom_dyndoc.sh
+./install_atom_dyndoc.sh
 ```
 * Final step: add ~/dyndoc/bin to your PATH (in your ~/.bash_profile)
 
@@ -73,3 +75,4 @@ cd dyndoc-ruby-install/bin
 1. In msys2, sometimes you need to launch a "/c/msys(32|64)/autorebase.bat" when child links fail.
 * Add R in the PATH (in .bash_profile or in the environment windows variable PATH)
 * update_dyndoc.sh added to update dyndoc
+* To install Ttm from source: compile it and when dyndoc is ready copy ttm binary in ~/dyndoc/bin 
