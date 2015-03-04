@@ -3,8 +3,8 @@
 ## Basic requirements
 
 ### MacOSX
-1. ruby: xcode provides one and homebrew is based on ruby.
-2. [homebrew](http://brew.sh) (optional)
+* ruby: xcode provides one and homebrew is based on ruby.
+* [homebrew](http://brew.sh) (optional)
 * [R](http://cran.r-project.org/bin/macosx/)
 * [latex (MacTex)](http://www.tug.org/mactex/)
 * [pandoc](https://github.com/jgm/pandoc/releases)
@@ -16,7 +16,7 @@ brew install git
 ```
 
 ### Windows
-1. [MSYS2](http://msys2.github.io)
+* [MSYS2](http://msys2.github.io)
 * complete the msys2 installation with certificates, ruby and git: 
 ```{bash}
 pacman -S ca-certificates
@@ -33,7 +33,7 @@ Note: other alternative could be [rubyinstaller](http://rubyinstaller.org) with 
 ### Linux
 There are many distributions but mainly all of them provide the following:
 
-1. ruby (>=2.0): ruby-dev (or similar) is usually required.
+* ruby (>=2.0): ruby-dev (or similar) is usually required.
 For ubuntu, if the default ruby version is lower than 2.0, install ruby2 and ruby-switch (using update-alternatives).
 * R (>=3.0): r-base-dev (or similar) is usually required.
 * latex (texlive for example)
