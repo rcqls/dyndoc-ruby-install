@@ -57,17 +57,15 @@ git clone git://github.com/rcqls/dyndoc-ruby-install.git
 cd dyndoc-ruby-install/bin
 ./install_dyndoc.sh
 ```
-* Atom editor installation:
-  * Windows system (MSYS2):
+* Atom editor installation (Windows MSYS2):
 ```{bash}
- ./install_atom_win.sh
- ```
-  * Other system: install [atom](https://atom.io)
+./install_atom_win.sh
+```
+* Atom editor installation (Linux and MacOSX): install first [atom](https://atom.io) and then
 ```{bash}
 ./bin/install_atom_dyndoc.sh
 ```
-* Final step:
-  * add ~/dyndoc/bin to your PATH (in your ~/.bash_profile)
+* Final step: add ~/dyndoc/bin to your PATH (in your ~/.bash_profile)
 
 
 ## FAQ
