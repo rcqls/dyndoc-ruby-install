@@ -53,7 +53,7 @@ The dyndoc-ruby installation is broken into 3 parts main parts:
 
 All these steps are more easily done as follows:
 
-1. Open a terminal (msys2_shell.bat for Windows users, not the Mingw one) and then:
+* Open a terminal (msys2_shell.bat for Windows users, not the Mingw one) and then:
 ```{bash}
 git clone git://github.com/rcqls/dyndoc-ruby-install.git
 cd dyndoc-ruby-install/bin
@@ -72,7 +72,7 @@ cd dyndoc-ruby-install/bin
 
 ## FAQ
 
-1. In msys2, sometimes you need to launch a "/c/msys(32|64)/autorebase.bat" when child links fail.
+* In msys2, sometimes you need to launch a "/c/msys(32|64)/autorebase.bat" when child links fail.
 * Add R in the PATH (in .bash_profile or in the environment windows variable PATH)
 * update_dyndoc.sh added to update dyndoc
 * To install Ttm from source: compile it and when dyndoc is ready copy ttm binary in ~/dyndoc/bin 
