@@ -186,7 +186,7 @@ fi
 if [ "$R_LIBS_USER" != ""  ]; then
 	PREFIX_R="-l $R_LIBS_USER"
 fi
-R CMD INSTALL $PREFIX_R rb4R
+R CMD INSTALL $PREFIX_R --no-multiarch rb4R
 
 cd ${prevdir}
 
