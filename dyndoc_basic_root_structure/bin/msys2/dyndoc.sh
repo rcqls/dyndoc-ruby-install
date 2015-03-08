@@ -28,7 +28,7 @@ if [ "$(which pdflatex)" = "" ]; then
 fi
 
 ## functions to update dyndoc (ruby and R)
-dyn-update-R4rb() {
+dyn-R4rb-update() {
   prevdir=$(pwd)
 
   cd $prevdir
@@ -44,7 +44,7 @@ dyn-update-R4rb() {
   cd ${prevdir}
 }
 
-dyn-update-core() {
+dyn-ruby-core-update() {
   prevdir=$(pwd)
 
   cd $prevdir
@@ -60,7 +60,7 @@ dyn-update-core() {
   cd ${prevdir}
 }
 
-dyn-update-doc() {
+dyn-ruby-doc-update() {
   prevdir=$(pwd)
 
   cd $prevdir
@@ -76,7 +76,7 @@ dyn-update-doc() {
   cd ${prevdir}
 }
 
-dyn-update-rb4R() {
+dyn-rb4R-update() {
   prevdir=$(pwd)
 
   cd $prevdir
@@ -97,13 +97,14 @@ dyn-update-rb4R() {
   cd ${prevdir}
 }
 
-dyn-update-ruby() {
-  dyn-update-R4rb
-  dyn-update-core
-  dyn-update-doc
+dyn-ruby-update() {
+  dyn-R4rb-update
+  dyn-ruby-core-update
+  dyn-ruby-doc-update
 }
 
-dyn-update-R() {
-  dyn-update-rb4R
+dyn-R-update() {
+  dyn-rb4R-update
 }
+
 
