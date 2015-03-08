@@ -36,4 +36,4 @@ for(i in 1:5) {
 }
 
 
-[#>]{#rsvg]plot(rnorm(10))[#}
+[#>]{#img64]plot(rnorm(10))[#}

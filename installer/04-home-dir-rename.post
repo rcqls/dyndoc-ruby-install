@@ -1,0 +1,11 @@
+maybe_copy_home ()
+{
+
+  # If the home directory doesn't exist, create it.
+  if [ ! -d "${HOME}" ] && [ -d "/home/Administrator" ]; then
+  	mv /home/Administrator ${HOME}
+    echo "First call => ${HOME} copied from /home/Administrator!"
+  fi
+}
+
+maybe_copy_home
