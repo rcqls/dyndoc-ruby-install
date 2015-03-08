@@ -43,5 +43,5 @@ Source: "C:\Users\Administrator\dyndocMsys32\*"; DestDir: "{#InstallDir}"; Flags
 [Icons]
 Name: "{group}\{#MyAppName}"; Filename: "{#InstallDir}\{#MyAppExeName}"
 Name: "{group}\{cm:UninstallProgram,{#MyAppName}}"; Filename: "{uninstallexe}"
-Name: "{commondesktop}\{#MyAppName}"; Filename: "{#InstallDir}\{#MyAppExeName}"; Tasks: desktopicon
-
+Name: "{commondesktop}\{#MyAppName}-Msys2"; Filename: "{#InstallDir}\{#MyAppExeName}"; Tasks: desktopicon; IconFilename: "{#InstallDir}\msys2.ico"
+Name: "{commondesktop}\{#MyAppName}-Mingw32"; Filename: "{#InstallDir}\mingw32_shell.bat"; Tasks: desktopicon; IconFilename: "{#InstallDir}\msys2.ico"
