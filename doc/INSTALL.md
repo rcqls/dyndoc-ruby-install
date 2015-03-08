@@ -43,15 +43,14 @@ For ubuntu, if the default ruby version is lower than 2.0, install ruby2 and rub
 * [Ttm](http://hutchinson.belmont.ma.us/tth/mml) from source
 * git
 
-## Installation steps
+## dyndoc-ruby installation
 
-The dyndoc-ruby installation is broken into 3 parts main parts:
+You can manually install the following ruby and R tools:
 
-1. ruby gems: R4rb, dyndoc-ruby-core and dyndoc-ruby-doc
+* ruby gems: R4rb, dyndoc-ruby-core and dyndoc-ruby-doc
 * R package: rb4R
-* [atom](https://atom.io) editor package: language-dyndoc (see dyndoc-syntax), atom-dyndoc-viewer
 
-All these steps are more easily done as follows:
+All these both steps are more easily done as follows:
 
 * Open a terminal (msys2_shell.bat for Windows users, not the Mingw one) and then:
 ```{bash}
@@ -59,16 +58,13 @@ git clone git://github.com/rcqls/dyndoc-ruby-install.git
 cd dyndoc-ruby-install/bin
 ./install_dyndoc.sh
 ```
-* Atom editor installation (Windows MSYS2):
-```{bash}
-./install_atom_win.sh
-```
-* Atom editor installation (Linux and MacOSX): install first [atom](https://atom.io) and then
-```{bash}
-./install_atom_dyndoc.sh
-```
-* Final step: add ~/dyndoc/bin to your PATH (in your ~/.bash_profile)
 
+## dyndoc-atom-viewer installation (very experimental)
+
+Install first [atom](https://atom.io) and then open a terminal (Mingw for Windows users, not the  Msys2 one):
+```{bash}
+dyn-atom-update
+```
 
 ## FAQ
 
