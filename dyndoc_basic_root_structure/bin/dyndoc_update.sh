@@ -79,16 +79,26 @@ dyn-R-update() {
 dyn-ruby-bin-update() {
   prevdir=$(pwd)
   cd $DYNDOC_HOME/bin
+  if [ -d .tmp ]; then rm -fr .tmp; fi 
+  mkdir .tmp
+  cd .tmp
   wget https://raw.githubusercontent.com/rcqls/dyndoc-ruby-install/master/dyndoc_basic_root_structure/bin/dyndoc-compile.rb
   wget https://raw.githubusercontent.com/rcqls/dyndoc-ruby-install/master/dyndoc_basic_root_structure/bin/dyndoc-package.rb
   wget https://raw.githubusercontent.com/rcqls/dyndoc-ruby-install/master/dyndoc_basic_root_structure/bin/dyndoc-server-simple.rb
   wget https://raw.githubusercontent.com/rcqls/dyndoc-ruby-install/master/dyndoc_basic_root_structure/bin/dyndoc_update.sh
   wget https://raw.githubusercontent.com/rcqls/dyndoc-ruby-install/master/dyndoc_basic_root_structure/bin/atom_update.sh
-
+  cd ..
+  mv .tmp/* .
+  rm -fr .tmp
   if [[ $MSYSTEM =~ ^MSYS ]]; then
     cd msys2
+    mkdir .tmp
+    cd .tmp
     wget https://raw.githubusercontent.com/rcqls/dyndoc-ruby-install/master/dyndoc_basic_root_structure/bin/msys2/dyndoc.sh
     wget https://raw.githubusercontent.com/rcqls/dyndoc-ruby-install/master/dyndoc_basic_root_structure/bin/msys2/file_tools.rb
+    cd ..
+    mv .tmp/* .
+    rm -fr .tmp
   fi
   
   cd $prevdir
