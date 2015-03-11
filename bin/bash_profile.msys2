@@ -1,3 +1,4 @@
 export DYNDOC_MSYS2_HOME="`ruby ~/dyndoc/bin/msys2/file_tools.rb home`"
+. $DYNDOC_HOME/bin/dyndoc_update.sh
 . $DYNDOC_MSYS2_HOME/dyndoc/bin/msys2/dyndoc.sh
 . $DYNDOC_MSYS2_HOME/dyndoc/bin/atom_update.sh
