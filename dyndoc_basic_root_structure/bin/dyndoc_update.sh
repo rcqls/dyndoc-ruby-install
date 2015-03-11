@@ -90,6 +90,8 @@ dyn-ruby-bin-update() {
   cd ..
   mv .tmp/* .
   rm -fr .tmp
+  cp dyndoc-compile.rb dyn
+  cp dyndoc-package.rb dpm
   if [[ $MSYSTEM =~ ^MSYS ]]; then
     cd msys2
     mkdir .tmp
