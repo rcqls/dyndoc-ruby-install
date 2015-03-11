@@ -45,8 +45,11 @@ FileUtils.ln_sf source,target
 # dyndoc-package unlink RCqls
 when :unlink
 package = ARGV[1]
-FileUtils.rm File.join(lib_dir,package)
-
+if RUBY_PLATFORM =~ /(?:msys|mingw)/
+	FileUtils.rm_rf File.join(lib_dir,package)
+else
+	FileUtils.rm File.join(lib_dir,package)
+end
 when :ls
 FileUtils.cd lib_dir
 Dir["*"].each_with_index{|e,i| puts "#{i+1}) #{e}"}
