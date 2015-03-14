@@ -1,4 +1,0 @@
-export DYNDOC_HOME=~/dyndoc
-export PATH="`ruby -e 'print Gem.user_dir'`/bin:$DYNDOC_HOME/bin:$PATH"
-. $DYNDOC_HOME/bin/dyndoc_update.sh
-. $DYNDOC_HOME/bin/atom_update.sh

@@ -48,12 +48,6 @@ else
 	echo ok
 fi
 
-if [[ $(uname) =~ ^(MSYS) ]]
-then
-		echo "install ca-certificates"
-		pacman -S --noconfirm ca-certificates
-fi
-
 echo "check make in PATH"
 if [ "$(which make)" = "" ]; then
 	if [[ $(uname) =~ ^(MSYS) ]]
@@ -110,11 +104,9 @@ fi
 echo "check bundle in PATH"
 if [ "$(which bundle)" = "" ]; then
 	echo "bundle is not in PATH!"
-	bashProfile="bash_profile"
 	if [[ $(uname) =~ ^(MSYS) ]]
 	then
 		rcFile=".bash_profile"
-		bashProfile="bash_profile.msys2"
 	else
 	 	read -p "Add `ruby -e 'print Gem.user_dir'`/bin to PATH? [1=~/.bash_profile, 2=~/.profile, 3=~/.bashrc, *=No]" -n 1 -r
 		echo    # (optional) move to a new line
@@ -137,7 +129,7 @@ if [ "$(which bundle)" = "" ]; then
 	if [[ "${rcFile}" != "" ]]
 	then
 		echo "## added automatically when installing dyndoc ruby" >>  ${HOME}/${rcFile}
-		echo `cat $SCRIPTPATH/$bashProfile` >> ${HOME}/${rcFile}
+		echo '. ~/dyndoc/bin/dyndoc_startup.sh' >> ${HOME}/${rcFile}
 		. ${HOME}/${rcFile}
 	fi
 	echo "recheck bundle in PATH"
