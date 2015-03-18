@@ -58,7 +58,7 @@
     |[#R>>](y<-rnorm(#{@sel.val()}))
     |log(-1)
     |a<-c(1,3,2)
-    |[#>]{#rsvg]plot(y)[#}
+    |[#>]{#img64]plot(y)[#}
   [#dyn>}
 
 @go3.click =>

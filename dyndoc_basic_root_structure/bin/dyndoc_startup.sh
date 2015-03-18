@@ -1,4 +1,4 @@
-if [[ $MSYSTEM =~ ^MSYS ]]; then
+if [[ $MSYSTEM =~ ^MSYS ]] || [[ $MSYSTEM =~ ^MINGW ]]; then
 	if [ "$WD" = "" ]; then
 		# required in ~/dyndoc/bin/msys2/file_tools.rb and dyndoc
   		export WD="${USERPROFILE}\\dyndocMsys32\\usr\\bin\\"

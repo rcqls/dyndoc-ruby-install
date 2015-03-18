@@ -129,6 +129,7 @@ if [ "$(which bundle)" = "" ]; then
 	if [[ "${rcFile}" != "" ]]
 	then
 		echo "## added automatically when installing dyndoc ruby" >>  ${HOME}/${rcFile}
+		#echo "[ \"\$WD\" = \"\" ] && export WD="
 		echo '. ~/dyndoc/bin/dyndoc_startup.sh' >> ${HOME}/${rcFile}
 		. ${HOME}/${rcFile}
 	fi

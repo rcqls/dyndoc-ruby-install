@@ -1,5 +1,13 @@
-toto
+toto3
+[#md>]## tutu
+[#ttm>]
+ttm mode
+\begin{equation}
+\int_{a_i}^{b} f(x) dx
+\end{equation}
 
 [#R>>]rnorm(10)
 
-[#>]titi
+[#>]format output: {#format_output#}
+
+{#img]plot(1:10)[#}
