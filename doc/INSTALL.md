@@ -66,9 +66,27 @@ Install first [atom](https://atom.io) and then open a terminal (Mingw for Window
 dyn-atom-update
 ```
 
+## update dyndoc tools
+
+* Update script: open a terminal and execute
+```{bash}
+bash -c "$(curl -fsSL https://raw.githubusercontent.com/rcqls/dyndoc-ruby-install/master/bin/update_dyndoc.sh)"
+```
+* Then
+```{bash}
+# to update ~/dyndoc/bin directory
+dyn-ruby-bin-update
+# to update ruby dyndoc tools
+dyn-ruby-update
+# to update R dyndoc tools
+dyn-R-update
+# Windows user only: to update atom tools
+dyn-atom-update 
+```
+
 ## FAQ
 
 * In msys2, sometimes you need to launch a "/c/msys(32|64)/autorebase.bat" when child links fail.
 * Add R in the PATH (in .bash_profile or in the environment windows variable PATH)
 * update_dyndoc.sh added to update dyndoc
-* To install Ttm from source: compile it and when dyndoc is ready copy ttm binary in ~/dyndoc/bin 
+* To install Ttm from source: compile it and when dyndoc is ready copy ttm binary in ~/dyndoc/bin

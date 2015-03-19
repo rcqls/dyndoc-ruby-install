@@ -85,6 +85,7 @@ dyn-ruby-bin-update() {
   wget https://raw.githubusercontent.com/rcqls/dyndoc-ruby-install/master/dyndoc_basic_root_structure/bin/dyndoc-compile.rb
   wget https://raw.githubusercontent.com/rcqls/dyndoc-ruby-install/master/dyndoc_basic_root_structure/bin/dyndoc-package.rb
   wget https://raw.githubusercontent.com/rcqls/dyndoc-ruby-install/master/dyndoc_basic_root_structure/bin/dyndoc-server-simple.rb
+  wget https://raw.githubusercontent.com/rcqls/dyndoc-ruby-install/master/dyndoc_basic_root_structure/bin/dyndoc-startup.sh
   wget https://raw.githubusercontent.com/rcqls/dyndoc-ruby-install/master/dyndoc_basic_root_structure/bin/dyndoc_update.sh
   wget https://raw.githubusercontent.com/rcqls/dyndoc-ruby-install/master/dyndoc_basic_root_structure/bin/atom_update.sh
   cd ..
