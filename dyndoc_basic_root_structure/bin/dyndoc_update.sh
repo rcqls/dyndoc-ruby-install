@@ -47,6 +47,9 @@ dyn-ruby-doc-update() {
   cd ${prevdir}
 }
 
+# dyn-rb4R-update
+# dyn-rb4R-update i386
+# dyn-rb4R-update x64
 dyn-rb4R-update() {
   prevdir=$(pwd)
 
@@ -58,7 +61,11 @@ dyn-rb4R-update() {
   	if [ "$R_LIBS_USER" != ""  ]; then
   		PREFIX_R="-l $R_LIBS_USER"
   	fi
-  	R CMD INSTALL $PREFIX_R rb4R
+    ARCH_R=""
+    if [ "$1" != "" ]; then
+      ARCH_R="--arch=$1"
+    fi
+  	R $ARCH_R CMD INSTALL $PREFIX_R rb4R
   else
   	echo "R update available only when $DYNDOC_HOME/install/R exists"
   fi
