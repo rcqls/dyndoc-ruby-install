@@ -72,7 +72,12 @@ dyn-atom-update
 ```{bash}
 bash -c "$(curl -fsSL https://raw.githubusercontent.com/rcqls/dyndoc-ruby-install/master/bin/update_dyndoc.sh)"
 ```
-* Then
+close the terminal. 
+* Check that the following line is in your `~/.bash_profile`
+```{bash}
+. ~/dyndoc/bin/dyndoc_startup.sh
+```
+* Then, reopen a terminal and
 ```{bash}
 # to update ~/dyndoc/bin directory
 dyn-ruby-bin-update
@@ -80,7 +85,9 @@ dyn-ruby-bin-update
 dyn-ruby-update
 # to update R dyndoc tools
 dyn-R-update
-# Windows user only: to update atom tools
+```
+* To update atom tools. Open a terminal (a MINGW one for Windows user) and
+```{bash}
 dyn-atom-update 
 ```
 
