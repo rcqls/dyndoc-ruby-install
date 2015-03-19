@@ -65,7 +65,7 @@ dyn-rb4R-update() {
     if [ "$1" != "" ]; then
       ARCH_R="--arch=$1"
     fi
-  	R $ARCH_R CMD INSTALL $PREFIX_R rb4R
+  	R $ARCH_R CMD INSTALL --no-multiarch $PREFIX_R rb4R
   else
   	echo "R update available only when $DYNDOC_HOME/install/R exists"
   fi
