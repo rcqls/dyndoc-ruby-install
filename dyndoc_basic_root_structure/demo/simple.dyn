@@ -11,3 +11,5 @@ ttm mode
 [#>]format output: {#format_output#}
 
 {#img]plot(1:10)[#}
+
+[#=]toto[tutu]
