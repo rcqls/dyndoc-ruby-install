@@ -10,7 +10,6 @@ TODO: DESCRIPTION
 
 [#rb<]nn=15;n2=3
 (1..10).map do |i| #
-	i*2
 end
 
 [#R>>]rnorm(:{nn})
@@ -36,4 +35,4 @@ for(i in 1:5) {
 }
 
 
-[#>]{#img64]plot(rnorm(10))[#}
+[#>]{#img]plot(rnorm(10))[#}

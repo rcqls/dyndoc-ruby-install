@@ -1,15 +1,10 @@
 toto3
 [#md>]## tutu
-[#ttm>]
-ttm mode
-\begin{equation}
-\int_{a_i}^{b} f(x) dx
-\end{equation}
-
+[#ttm>]$$\int\pi=#r{pi}$$
 [#R>>]rnorm(10)
 
 [#>]format output: {#format_output#}
 
-{#img]plot(1:10)[#}
+{#img]plot(rnorm(10))[#}
 
 [#=]toto[tutu]

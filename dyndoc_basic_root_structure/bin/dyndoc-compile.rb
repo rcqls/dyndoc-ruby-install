@@ -41,6 +41,10 @@ OptionParser.new do |opts|
     Settings["cfg_dyn.cmd_doc"] = [:list]
   end
 
+  opts.on('--docker',"docker mode") do
+      Settings["cfg_dyn.docker_mode"]=true
+  end
+
 end.parse!
 
 ## ARGV is consumed before
