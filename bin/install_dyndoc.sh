@@ -40,13 +40,13 @@ else
 	echo ok
 fi
 
-echo "check pandoc in PATH"
-if [ "$(which pandoc)" = "" ]; then
-	echo "pandoc is not installed or in the PATH!" 
- 	exit
-else
-	echo ok
-fi
+# echo "check pandoc in PATH"
+# if [ "$(which pandoc)" = "" ]; then
+# 	echo "pandoc is not installed or in the PATH!" 
+#  	exit
+# else
+# 	echo ok
+# fi
 
 echo "check make in PATH"
 if [ "$(which make)" = "" ]; then
