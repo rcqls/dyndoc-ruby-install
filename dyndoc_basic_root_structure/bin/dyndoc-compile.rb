@@ -22,15 +22,15 @@ OptionParser.new do |opts|
     Settings["cfg_dyn.model_doc"] = "Content"
   end
 
-  opts.on('-c', '--cmd COMMAND','[a(rchive old)][r(emove old)][s(ave)]') {|c|
+  opts.on('-c', '--cmd COMMAND','[a(rchive old)][r(emove old)][s(ave)][pdf(latex)]') {|c|
     cmd =[:make_content]
     cmd << :save_old if c.include? "a"
     cmd << :rm_old if c.include? "r"
     cmd << :save if c.include? "s"
     ## cmd << :cat if c.include? "c"
-    ## cmd << :pdf  if c =~ /(E)?pdf([1-3])?/ #if c.include? "pdf"
-    ## Settings["cfg_dyn.options.pdflatex_echo"]=true if $1
-    ## Settings["cfg_dyn.options.pdflatex_nb_pass"]=$2.to_i if $2
+    cmd << :pdf  if c =~ /(E)?pdf([1-3])?/ #if c.include? "pdf"
+    Settings["cfg_dyn.options.pdflatex_echo"]=true if $1 # useable for log sytem (to introduce possibly later)
+    Settings["cfg_dyn.options.pdflatex_nb_pass"]=$2.to_i if $2
     ## cmd << :png if c.include? "png"
     ## cmd << :view if c.include? "v"
     ## cmd << :save << :view if c.include? "x"
