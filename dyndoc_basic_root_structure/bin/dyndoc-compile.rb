@@ -13,7 +13,7 @@ OptionParser.new do |opts|
   end
 
   opts.on("-f", "--format ", "format of the dyndoc document") do |format|
-    Settings["cfg_dyn.format_doc"] = format
+    Settings["cfg_dyn.format_doc"] = format.to_sym
   end
 
   opts.on('-t','--tags TAGS',Array,'filter tags') {|t| Settings["cfg_dyn.tag_tmpl"] = t}
