@@ -166,6 +166,10 @@ cd dyndoc-ruby-core;rake install
 cd $DYNDOC_HOME/install/ruby
 git clone git://github.com/rcqls/dyndoc-ruby-doc.git
 cd dyndoc-ruby-doc;rake install
+cd $DYNDOC_HOME/install/ruby
+git clone git://github.com/rcqls/dyndoc-ruby-exec.git
+cd dyndoc-ruby-exec;rake install
+
 
 echo "install R stuff: rb4R R package"
 mkdir -p $DYNDOC_HOME/install/R

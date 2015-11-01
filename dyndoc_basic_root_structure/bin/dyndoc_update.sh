@@ -47,6 +47,22 @@ dyn-ruby-doc-update() {
   cd ${prevdir}
 }
 
+dyn-ruby-exec-update() {
+  prevdir=$(pwd)
+
+  cd $prevdir
+
+  if [ -d $DYNDOC_HOME/install/ruby ]; then
+    echo "ruby update: dyndoc-ruby-exec gem"
+    cd $DYNDOC_HOME/install/ruby
+    cd dyndoc-ruby-exec;git pull;rake install
+  else
+    echo "ruby update available only when $DYNDOC_HOME/install/ruby exists"
+  fi
+
+  cd ${prevdir}
+}
+
 # dyn-rb4R-update
 # dyn-rb4R-update i386
 # dyn-rb4R-update x64
@@ -77,6 +93,7 @@ dyn-ruby-update() {
   dyn-R4rb-update
   dyn-ruby-core-update
   dyn-ruby-doc-update
+  dyn-ruby-exec-update
 }
 
 dyn-R-update() {
