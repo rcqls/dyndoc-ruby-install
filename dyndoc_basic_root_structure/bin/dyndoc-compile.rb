@@ -43,9 +43,14 @@ OptionParser.new do |opts|
     Settings["cfg_dyn.cmd_doc"] = [:list]
   end
 
-  opts.on('--docker',"docker mode") do
-      Settings["cfg_dyn.docker_mode"]=true
+  opts.on("-p", "--pandoc ", "filter for pandoc (tex2docx,...)") do |f|
+    #p [:pandoc,f]
+    Settings["cfg_dyn.pandoc_filter"] = f
   end
+
+  # opts.on('--docker',"docker mode") do
+  #     Settings["cfg_dyn.docker_mode"]=true
+  # end
 
 end.parse!
 
