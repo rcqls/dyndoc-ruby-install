@@ -20,13 +20,15 @@ module Dyndoc
         @tmpl_mngr = Dyndoc::Ruby::TemplateManager.new({})
         ##is it really well-suited for interactive mode???
         @tmpl_mngr.init_doc({:format_output=> "html"})
+        @tmpl_mngr.require_dyndoc_libs("DyndocWebTools")
         puts "InteractiveServer initialized!\n"
       end
     end
 
     def process_dyndoc(content)
       ##p [:process_dyndoc_content,content]
-      @tmpl_mngr.parse(content)
+      @content=@tmpl_mngr.parse(content)
+      @tmpl_mngr.filterGlobal.envir["body.content"]=@content
     end
 
     def init_server  
@@ -35,29 +37,29 @@ module Dyndoc
 
     def run
     	trap("SIGINT") { @server.close;exit! }
-		loop {
-			socket = @server.accept
+  		loop {
+  			socket = @server.accept
 
-			b=socket.recv(100000)
-			##p [:b,b]
-			data=b.to_s.strip
-			##p [:data,data]
-			if data =~ /^__send_cmd__\[\[([a-z]*)\]\]__(.*)__\[\[END_TOKEN\]\]__$/m
-			cmd,content = $1,$2
-			##p [:cmd,cmd,:content,content]
-			if content.strip == "__EXIT__" 
-				socket.close
-				@server.close
-				break
-			end
-			if cmd == "dyndoc"
-			  res = process_dyndoc(content)
-			  ## p [:dyndoc_server,content,res]
-			  socket.write "__send_cmd__[[dyndoc]]__"+res+"__[[END_TOKEN]]__"
-			end
-			end
-			socket.close
-		}
+  			b=socket.recv(100000)
+  			##p [:b,b]
+  			data=b.to_s.strip
+  			##p [:data,data]
+  			if data =~ /^__send_cmd__\[\[([a-z]*)\]\]__(.*)__\[\[END_TOKEN\]\]__$/m
+    			cmd,content = $1,$2
+    			##p [:cmd,cmd,:content,content]
+    			if content.strip == "__EXIT__" 
+    				socket.close
+    				@server.close
+    				break
+    			end
+    			if cmd == "dyndoc"
+    			  res = process_dyndoc(content)
+    			  ##p [:dyndoc_server,content,res]
+    			  socket.write "__send_cmd__[[dyndoc]]__"+res+"__[[END_TOKEN]]__"
+    			end
+  			end
+  			socket.close
+  		}
     end
 
   end
