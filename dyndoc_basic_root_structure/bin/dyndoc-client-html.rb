@@ -9,11 +9,14 @@ module Dyndoc
 
 		@@end_token="__[[END_TOKEN]]__"
 
-		def initialize(cmd,addr="127.0.0.1",port=7777)
-			@addr,@port,@cmd=addr,port,cmd
+		def initialize(cmd,tmpl_filename,addr="127.0.0.1",port=7777)
+			@addr,@port,@cmd,@tmpl_filename=addr,port,cmd,tmpl_filename
+			##p [:tmpl_filename,@tmpl_filename]
+			dyndoc_cmd="dyndoc"
+			dyndoc_cmd += "|"+@tmpl_filename if @tmpl_filename 
 
 			Socket.tcp(addr, 7777) {|sock|
-  				sock.print '__send_cmd__[[dyndoc]]__' + @cmd + @@end_token
+  				sock.print '__send_cmd__[['+dyndoc_cmd+']]__' + @cmd + @@end_token
   				sock.close_write
   				@result=sock.read
 			}
@@ -21,6 +24,7 @@ module Dyndoc
 			data=@result.split(@@end_token,-1)
 			last=data.pop
 			resCmd=decode_cmd(data.join(""))
+			##p [:resCmd,resCmd]
 			if resCmd[:cmd] != "windows_platform"
 				@content=resCmd[:content]
 			end
@@ -99,10 +103,10 @@ dyn_layout=nil if dyn_layout and !File.exist? dyn_layout
 
 if dyn_file
 	code=File.read(dyn_file)
-	cli=Dyndoc::Client.new(code,addr)
+	cli=Dyndoc::Client.new(code,File.expand_path(dyn_file),addr)
 
 	if dyn_layout
-	 	cli=Dyndoc::Client.new(File.read(dyn_layout),addr)
+	 	cli=Dyndoc::Client.new(File.read(dyn_layout),File.expand_path(dyn_layout),addr)
 	end
 
 	if dyn_output and Dir.exist? File.dirname(dyn_output)

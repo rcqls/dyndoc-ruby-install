@@ -10,6 +10,7 @@ module Dyndoc
 
     def initialize
       @tmpl_mngr=nil
+      @tmpl_filename=nil
       init_dyndoc
       init_server
     end
@@ -29,6 +30,13 @@ module Dyndoc
       ##p [:process_dyndoc_content,content]
       @content=@tmpl_mngr.parse(content)
       @tmpl_mngr.filterGlobal.envir["body.content"]=@content
+      if @tmpl_filename
+        @tmpl_mngr.filterGlobal.envir["_FILENAME_CURRENT_"]=@tmpl_filename.dup
+        @tmpl_mngr.filterGlobal.envir["_FILENAME_"]=@tmpl_filename.dup #register name of template!!!
+        @tmpl_mngr.filterGlobal.envir["_FILENAME_ORIG_"]=@tmpl_filename.dup #register name of template!!!
+        @tmpl_mngr.filterGlobal.envir["_PWD_"]=File.dirname(@tmpl_filename)
+      end
+      return @content
     end
 
     def init_server  
@@ -44,9 +52,9 @@ module Dyndoc
   			##p [:b,b]
   			data=b.to_s.strip
   			##p [:data,data]
-  			if data =~ /^__send_cmd__\[\[([a-z]*)\]\]__(.*)__\[\[END_TOKEN\]\]__$/m
-    			cmd,content = $1,$2
-    			##p [:cmd,cmd,:content,content]
+  			if data =~ /^__send_cmd__\[\[([a-z]*)\|?([^\]]*)?\]\]__(.*)__\[\[END_TOKEN\]\]__$/m
+          cmd,@tmpl_filename,content = $1,$2,$3
+    			##p [:cmd,cmd,:content,content,:filename,@tmpl_filename]
     			if content.strip == "__EXIT__" 
     				socket.close
     				@server.close
