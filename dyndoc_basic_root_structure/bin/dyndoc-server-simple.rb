@@ -40,6 +40,10 @@ module Dyndoc
       return @content
     end
 
+    def init_dyndoc_libs
+
+    end
+
     def init_server  
       @server = TCPServer.new('0.0.0.0',7777)
     end
@@ -65,7 +69,9 @@ module Dyndoc
     			  res = process_dyndoc(content)
     			  ##p [:dyndoc_server,content,res]
     			  socket.write "__send_cmd__[[dyndoc]]__"+res+"__[[END_TOKEN]]__"
-    			end
+    			elsif cmd == "dyndoc_layout_reinit"
+            LayoutMngr.reinit
+          end
   			end
   			socket.close
   		}

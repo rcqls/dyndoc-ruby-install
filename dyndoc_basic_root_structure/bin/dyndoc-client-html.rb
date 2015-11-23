@@ -16,6 +16,7 @@ module Dyndoc
 			dyndoc_cmd += "|"+@tmpl_filename if @tmpl_filename 
 
 			Socket.tcp(addr, 7777) {|sock|
+				sock.print '__send_cmd__[[dyndoc_layout_reinit]]__' + @@end_token
   				sock.print '__send_cmd__[['+dyndoc_cmd+']]__' + @cmd + @@end_token
   				sock.close_write
   				@result=sock.read
@@ -96,6 +97,14 @@ else
 	if i=(dyn_file =~ /\_?(?:html|tex)?\.dyn$/)
 		dyn_layout=dyn_file[0...i]+"_layout.dyn" if File.exist? dyn_file[0...i]+"_layout.dyn"		
 	end
+end
+
+if !dyn_layout and File.exist? ".dyn_layout"
+	dyn_layout=File.read(".dyn_layout").strip
+end
+
+if !dyn_layout and File.exist?(etc_dyn_layout=File.join(ENV["HOME"],".dyndocker","etc","dyn_layout"))
+	dyn_layout=File.read(etc_dyn_layout).strip
 end
 
 dyn_file=nil unless File.exist? dyn_file
