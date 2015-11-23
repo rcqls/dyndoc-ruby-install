@@ -23,6 +23,7 @@ module Dyndoc
         @tmpl_mngr.init_doc({:format_output=> "html"})
         @tmpl_mngr.require_dyndoc_libs("DyndocWebTools")
         puts "InteractiveServer initialized!\n"
+        @tmpl_mngr.as_default_tmpl_mngr! #=> Dyndoc.tmpl_mngr activated!
       end
     end
 
