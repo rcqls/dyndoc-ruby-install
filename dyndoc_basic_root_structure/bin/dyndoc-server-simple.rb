@@ -20,12 +20,19 @@ module Dyndoc
         Dyndoc.cfg_dyn['dyndoc_session']=:interactive
         @tmpl_mngr = Dyndoc::Ruby::TemplateManager.new({})
         ##is it really well-suited for interactive mode???
+      end
+      reinit_dyndoc
+    end
+
+    def reinit_dyndoc
+      if @tmpl_mngr
         @tmpl_mngr.init_doc({:format_output=> "html"})
         @tmpl_mngr.require_dyndoc_libs("DyndocWebTools")
-        puts "InteractiveServer initialized!\n"
+        puts "InteractiveServer (re)initialized!\n"
         @tmpl_mngr.as_default_tmpl_mngr! #=> Dyndoc.tmpl_mngr activated!
       end
     end
+
 
     def process_dyndoc(content)
       ##p [:process_dyndoc_content,content]
@@ -38,10 +45,6 @@ module Dyndoc
         @tmpl_mngr.filterGlobal.envir["_PWD_"]=File.dirname(@tmpl_filename)
       end
       return @content
-    end
-
-    def init_dyndoc_libs
-
     end
 
     def init_server  
@@ -65,10 +68,15 @@ module Dyndoc
     				@server.close
     				break
     			end
-          if cmd == "dyndoc_with_layout_reinit"
+          if cmd =~ /(.*)_with_layout_reinit$/
               LayoutMngr.reinit
-              cmd="dyndoc"
-            end
+              cmd=$1
+          end
+          if cmd =~ /(.*)_with_libs_reinit$/
+              reinit_dyndoc
+              cmd=$1
+          end
+
     			if cmd == "dyndoc"
     			  res = process_dyndoc(content)
     			  ##p [:dyndoc_server,content,res]

@@ -9,11 +9,14 @@ module Dyndoc
 
 		@@end_token="__[[END_TOKEN]]__"
 
-		def initialize(cmd,tmpl_filename,addr="127.0.0.1",layout_reinit=false,port=7777)
+		## reinit is an array 
+		def initialize(cmd,tmpl_filename,addr="127.0.0.1",reinit=[],port=7777)
 			@addr,@port,@cmd,@tmpl_filename=addr,port,cmd,tmpl_filename
 			##p [:tmpl_filename,@tmpl_filename]
-			dyndoc_cmd="dyndoc" + (layout_reinit ? "_with_layout_reinit" : "")
-			dyndoc_cmd += "|"+@tmpl_filename if @tmpl_filename 
+			## The layout needs to be reintailized for new dyndoc file but not for the layout (of course)!
+			dyndoc_cmd="dyndoc" 
+			dyndoc_cmd += "_with_libs_reinit" if reinit.include? :dyndoc_libs
+			dyndoc_cmd += "_with_layout_reinit" if reinit.include? :dyndoc_layout
 
 			Socket.tcp(addr, 7777) {|sock|
   				sock.print '__send_cmd__[['+dyndoc_cmd+']]__' + @cmd + @@end_token
@@ -87,7 +90,7 @@ else
 	addr="127.0.0.1"
 end
 
-dyn_file,dyn_layout=nil,nil
+dyn_file,dyn_layout,dyn_libs=nil,nil,nil
 
 if arg.include? ","
 	dyn_file,dyn_layout=arg.split(",")
@@ -102,8 +105,16 @@ if !dyn_layout and File.exist? ".dyn_layout"
 	dyn_layout=File.read(".dyn_layout").strip
 end
 
-if !dyn_layout and File.exist?(etc_dyn_layout=File.join(ENV["HOME"],".dyndocker","etc","dyn_layout"))
+if !dyn_layout and File.exist?(etc_dyn_layout=File.join(ENV["HOME"],".dyndocker","etc","dyn_cli_layout"))
 	dyn_layout=File.read(etc_dyn_layout).strip
+end
+
+if !dyn_libs and File.exist? ".dynlibs" 
+	dyn_libs='[#require]\n'+File.read(etc_dyn_libs).strip+'[#main][#>]'
+end
+
+if !dyn_libs and File.exist?(etc_dyn_libs=File.join(ENV["HOME"],".dyndocker","etc","dyn_cli_libs"))
+	dyn_libs='[#require]\n'+File.read(etc_dyn_libs).strip+'[#main][#>]'
 end
 
 dyn_file=nil unless File.exist? dyn_file
@@ -111,7 +122,8 @@ dyn_layout=nil if dyn_layout and !File.exist? dyn_layout
 
 if dyn_file
 	code=File.read(dyn_file)
-	cli=Dyndoc::Client.new(code,File.expand_path(dyn_file),addr,true)
+	code = '[#require]\n'+dyn_libs+'[#main][#>]' + code if dyn_libs
+	cli=Dyndoc::Client.new(code,File.expand_path(dyn_file),addr,[:dyndoc_libs,:dyndoc_layout])
 
 	if dyn_layout
 	 	cli=Dyndoc::Client.new(File.read(dyn_layout),File.expand_path(dyn_layout),addr)
