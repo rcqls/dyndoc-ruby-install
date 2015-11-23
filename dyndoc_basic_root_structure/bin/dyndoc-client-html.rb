@@ -9,14 +9,13 @@ module Dyndoc
 
 		@@end_token="__[[END_TOKEN]]__"
 
-		def initialize(cmd,tmpl_filename,addr="127.0.0.1",port=7777)
+		def initialize(cmd,tmpl_filename,addr="127.0.0.1",layout_reinit=false,port=7777)
 			@addr,@port,@cmd,@tmpl_filename=addr,port,cmd,tmpl_filename
 			##p [:tmpl_filename,@tmpl_filename]
-			dyndoc_cmd="dyndoc"
+			dyndoc_cmd="dyndoc" + (layout_reinit ? "_with_layout_reinit" : "")
 			dyndoc_cmd += "|"+@tmpl_filename if @tmpl_filename 
 
 			Socket.tcp(addr, 7777) {|sock|
-				sock.print '__send_cmd__[[dyndoc_layout_reinit]]__' + @@end_token
   				sock.print '__send_cmd__[['+dyndoc_cmd+']]__' + @cmd + @@end_token
   				sock.close_write
   				@result=sock.read
@@ -112,7 +111,7 @@ dyn_layout=nil if dyn_layout and !File.exist? dyn_layout
 
 if dyn_file
 	code=File.read(dyn_file)
-	cli=Dyndoc::Client.new(code,File.expand_path(dyn_file),addr)
+	cli=Dyndoc::Client.new(code,File.expand_path(dyn_file),addr,true)
 
 	if dyn_layout
 	 	cli=Dyndoc::Client.new(File.read(dyn_layout),File.expand_path(dyn_layout),addr)

@@ -57,7 +57,7 @@ module Dyndoc
   			##p [:b,b]
   			data=b.to_s.strip
   			##p [:data,data]
-  			if data =~ /^__send_cmd__\[\[([a-z]*)\|?([^\]]*)?\]\]__(.*)__\[\[END_TOKEN\]\]__$/m
+  			if data =~ /^__send_cmd__\[\[([a-z,_]*)\|?([^\]]*)?\]\]__(.*)__\[\[END_TOKEN\]\]__$/m
           cmd,@tmpl_filename,content = $1,$2,$3
     			##p [:cmd,cmd,:content,content,:filename,@tmpl_filename]
     			if content.strip == "__EXIT__" 
@@ -65,12 +65,16 @@ module Dyndoc
     				@server.close
     				break
     			end
+          if cmd == "dyndoc_with_layout_reinit"
+              LayoutMngr.reinit
+              cmd="dyndoc"
+            end
     			if cmd == "dyndoc"
     			  res = process_dyndoc(content)
     			  ##p [:dyndoc_server,content,res]
     			  socket.write "__send_cmd__[[dyndoc]]__"+res+"__[[END_TOKEN]]__"
     			elsif cmd == "dyndoc_layout_reinit"
-            LayoutMngr.reinit
+            
           end
   			end
   			socket.close
