@@ -1,2 +1,5 @@
 source 'https://rubygems.org'
 gemspec
+gem 'dyndoc-ruby-core', :github => 'rcqls/dyndoc-ruby-core'
+gem 'dyndoc-ruby-exec', :github => 'rcqls/dyndoc-ruby-exec'
+gem 'R4rb', :github => 'rcqls/R4rb'
