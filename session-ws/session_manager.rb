@@ -1,4 +1,10 @@
-class SessionMngr
+class Session
+
+	@@mngr=nil
+	def Session.mngr
+		@@mngr=self.new unless @@mngr
+		@@mngr
+	end
 
 	def initialize
 		@sessions = {}
@@ -6,7 +12,22 @@ class SessionMngr
 	end
 
 	def session_new(id,passwd)
-		@sessions[id] = {:users=>[],:user_info => {},:ws_clients => {},:passwd => passwd}
+		if (questions=Answers.mngr.load_questions(id))
+			@sessions[id] = {:users=>[],:user_info => {},:ws_clients => {},:passwd => passwd,:q_ids => questions[:ids],:questions => questions[:questions]}
+		else
+			puts "No questions for session id #{id}!"
+		end
+	end
+
+	def session_answer_id(id)
+		@sessions[id][:passwd]
+	end
+
+	def session_question(id,qid)
+		
+		questions=@sessions[id][:questions]
+		p [qid,questions.keys]
+		questions[qid][:html] if questions[qid]
 	end
 
 	def session_remove(id)

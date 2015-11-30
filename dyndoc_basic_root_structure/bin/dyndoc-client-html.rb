@@ -3,6 +3,7 @@
 require "socket"
 
 module Dyndoc
+
 	class Client
 		
 		attr_reader :content
@@ -11,6 +12,7 @@ module Dyndoc
 
 		## reinit is an array 
 		def initialize(cmd,tmpl_filename,addr="127.0.0.1",reinit=[],port=7777)
+			
 			@addr,@port,@cmd,@tmpl_filename=addr,port,cmd,tmpl_filename
 			##p [:tmpl_filename,@tmpl_filename]
 			## The layout needs to be reintailized for new dyndoc file but not for the layout (of course)!
@@ -19,7 +21,7 @@ module Dyndoc
 			dyndoc_cmd += "_with_layout_reinit" if reinit.include? :dyndoc_layout
 
 			Socket.tcp(addr, 7777) {|sock|
-  				sock.print '__send_cmd__[['+dyndoc_cmd+']]__' + @cmd + @@end_token
+  				sock.print '__send_cmd__[['+dyndoc_cmd+'|'+@tmpl_filename+']]__' + @cmd + @@end_token
   				sock.close_write
   				@result=sock.read
 			}
@@ -126,7 +128,7 @@ if dyn_file
 	cli=Dyndoc::Client.new(code,File.expand_path(dyn_file),addr,[:dyndoc_libs,:dyndoc_layout])
 
 	if dyn_layout
-	 	cli=Dyndoc::Client.new(File.read(dyn_layout),File.expand_path(dyn_layout),addr)
+	 	cli=Dyndoc::Client.new(File.read(dyn_layout),"",addr) #File.expand_path(dyn_layout),addr)
 	end
 
 	if dyn_output and Dir.exist? File.dirname(dyn_output)
