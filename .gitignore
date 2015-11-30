@@ -1,6 +1,6 @@
 session/
-.bundle/
-Gemfile*
+.bundle/config
+Gemfile.lock
 *.log
 *.aux
 *.pdf
