@@ -12,7 +12,7 @@ class Session
 	end
 
 	def session_new(id,passwd)
-		if (questions=Answers.mngr.load_questions(id))
+		if (questions=Answers.mngr.load_questions(id,passwd))
 			@sessions[id] = {:users=>[],:user_info => {},:ws_clients => {},:passwd => passwd,:q_ids => questions[:ids],:questions => questions[:questions]}
 		else
 			puts "No questions for session id #{id}!"
@@ -65,6 +65,10 @@ class Session
 		@sessions[id][:ws_clients][user] = ws_client
 		@sessions[id][:user_info][user] = info
 		@ws_clients[ws_client]={:user => user, :id => id}
+	end
+
+	def session_user_id(id,ws_client)
+		(@ws_clients[ws_client][:id] == id) ? @ws_clients[ws_client][:user] : nil
 	end
 
 	def session_user_remove(ws_client)

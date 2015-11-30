@@ -25,9 +25,9 @@ class Answers
 		@session_wdir={}
 	end
 
-	def init_session(id)
+	def init_session(id,passwd)
 		if id
-			@answer_id[id]=Session.mngr.session_answer_id(id)
+			@answer_id[id]=passwd
 			@session_ids << id
 			@session_ids.uniq!
 		end
@@ -45,9 +45,9 @@ class Answers
 		File.join(@session_wdir[id],user)
 	end
 
-	def load_questions(id)
+	def load_questions(id,passwd)
 		return unless id
-		init_session(id)
+		init_session(id,passwd)
 		if session_active(id)
 			filename=File.join(@root_session,session_id(id),"questions")
 			@questions[id]=eval(File.read(filename)) if File.exist? filename
@@ -68,7 +68,7 @@ class Answers
 	def set_user_answer(id,user,qid,answer)
 		init_user_answer(id,user)
 		@answers[id][user][qid] = answer
-		save_user_answer(id,passwd,user)
+		save_user_answer(id,user)
 	end
 
 	## answers are save by answer and user in one file

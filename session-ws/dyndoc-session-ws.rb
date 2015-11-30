@@ -57,6 +57,21 @@ DyndocServerApp = lambda do |env|
         when "session_answer"
           if id and Session.mngr.is_session? id
 
+            if (user=Session.mngr.session_user_id(id,ws))
+              
+              if content =~ /^([^\|]*)\|([^\|]*)$/
+                qid,answer=$1,$2
+                Answers.mngr.set_user_answer(id,user,qid,answer)
+                msg="Answer sent!"
+              else
+                msg="Answer not sent!"
+              end
+            else
+              # Normally this does never happen! 
+              msg="User not registered for this session!"
+            end
+            p [:msg,msg]
+            ws.send "__send_cmd__[[dyndoc#session_msg]]__"+ msg +"__[[WS_END_TOKEN]]__"
           end
 
         ## All actions above are admin tasks
