@@ -1,5 +1,5 @@
 session/
-.bundle/config
+config
 Gemfile.lock
 *.log
 *.aux
