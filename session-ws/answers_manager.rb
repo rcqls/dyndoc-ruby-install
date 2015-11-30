@@ -18,7 +18,7 @@ class Answers
 
 	def initialize
 		@session_ids=[]
-		@root_session=File.expand_path("./session")
+		@root_session=File.expand_path(File.join(File.dirname(__FILE__),"session"))
 		@answer_id={} #by session_id (correspond to passwd)
 		@questions={}
 		@answers={}
