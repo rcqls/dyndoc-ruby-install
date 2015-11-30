@@ -1,4 +1,6 @@
 session/
+.bundle/
+Gemfile*
 *.log
 *.aux
 *.pdf
