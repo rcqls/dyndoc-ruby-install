@@ -17,6 +17,16 @@ tmpl_mngr.init_doc({:format_output=> "html"})
 puts "InteractiveServer initialized!\n"
 tmpl_mngr.as_default_tmpl_mngr! #=> Dyndoc.tmpl_mngr activated!
 
+def send_dyndoc(ws,id,content="")
+  ws.send "__send_cmd__[[dyndoc"+(id||"")+"]]__"+content+"__[[WS_END_TOKEN]]__"
+end
+
+def send_jquery(ws,cmd,id,content="")
+  ws.send "__send_cmd__[[jquery_"+cmd+id+"]]__"+content+"__[[WS_END_TOKEN]]__"
+end
+
+ws_admin=nil
+
 DyndocServerApp = lambda do |env|
   if Faye::WebSocket.websocket?(env)
     ws = Faye::WebSocket.new(env, ['irc', 'xmpp'], options)
@@ -35,7 +45,7 @@ DyndocServerApp = lambda do |env|
           tmpl_mngr.filterGlobal.envir["body.content"]=content #+"2"
           ##p [:dyndoc_server,content,res]
           #p [:sent,"__send_cmd__[[dyndoc"+(id||"")+"]]__"+content+"__[[WS_END_TOKEN]]__"]
-          ws.send "__send_cmd__[[dyndoc"+(id||"")+"]]__"+content+"__[[WS_END_TOKEN]]__"
+          send_dyndoc(ws,id,content)
         when "session_login"
           if id and Session.mngr.is_session? id
             if content =~ /^([^\|]*)\|([^\|]*)\|([^\|]*)$/
@@ -48,7 +58,8 @@ DyndocServerApp = lambda do |env|
                 msg = "User #{user} disconnected! Bad session id or password!"
               end 
               #p msg
-              ws.send "__send_cmd__[[dyndoc#session_msg]]__"+ msg +"__[[WS_END_TOKEN]]__"
+              send_dyndoc(ws,"#session_msg",msg)
+              send_dyndoc(ws_admin,"#session_list",Session.mngr.sessions_summary)
             else
               p "ici"
             end
@@ -71,29 +82,58 @@ DyndocServerApp = lambda do |env|
               msg="User not registered for this session!"
             end
             p [:msg,msg]
-            ws.send "__send_cmd__[[dyndoc#session_msg]]__"+ msg +"__[[WS_END_TOKEN]]__"
+            send_dyndoc(ws,"#session_msg",msg)
           end
 
         ## All actions above are admin tasks
+      when "session_admin_login"
+          #content is here the admin password
+          p [:passwd_admin,content]
+          if Session.mngr.session_admin_login? content
+            send_jquery(ws,"hide","#session_admin_login")
+            send_jquery(ws,"hide","#session_msg")
+            send_jquery(ws,"show","#session_admin")
+            #p Answers.mngr.load_form_list
+            send_jquery(ws,"html","#session_id_admin",Answers.mngr.load_form_list)
+            send_jquery(ws,"trigger","#session_id_admin","change")
+            send_dyndoc(ws,"#session_list",Session.mngr.sessions_summary)
+            # register ws_admin
+            ws_admin = ws
+          else
+            send_jquery(ws,"html","#session_msg","Bad password!")
+          end
+        when "session_admin_question_view"
+          ##p [:id,id,:content,content]
+          html_content=Session.mngr.session_question(id,content,[:html])
+          ##p [:session_admin_question_view,html_content]
+          send_jquery(ws_admin,"html","#session_question_view",html_content)
         when "session_new"
-          # content is here the password supplied by for other clients
-          Session.mngr.session_new(id,content) unless Session.mngr.is_session?(id)
-          p Session.mngr.session_ls
-          ws.send "__send_cmd__[[dyndoc#session_list]]__"+Session.mngr.sessions_summary+"__[[WS_END_TOKEN]]__"
+          if Session.mngr.session_admin_ok?
+            # content is here the password supplied by for other clients
+            Session.mngr.session_new(id,content) unless Session.mngr.is_session?(id)
+            p Session.mngr.session_ls
+            send_dyndoc(ws,"#session_list",Session.mngr.sessions_summary)
+            send_jquery(ws,"html","#session_question_id_admin",Answers.mngr.load_question_list(id))
+            send_jquery(ws,"trigger","#session_question_id_admin","change")
+          end
+        when "session_reload"
+          p [:session_reload,Session.mngr.session_admin_ok?]
+          if Session.mngr.session_admin_ok?
+            Session.mngr.session_reload_questions(id)
+            send_jquery(ws,"html","#session_question_id_admin",Answers.mngr.load_question_list(id))
+          end
         when "session_remove"
-          Session.mngr.session_remove(id)
-          p Session.mngr.session_ls
-          ws.send "__send_cmd__[[dyndoc#session_list]]__"+Session.mngr.sessions_summary+"__[[WS_END_TOKEN]]__"
+          if Session.mngr.session_admin_ok?
+            Session.mngr.session_remove(id)
+            p Session.mngr.session_ls
+            send_dyndoc(ws,"#session_list",Session.mngr.sessions_summary)
+          end
         when "session_ls"
-          p [:session_id,id]
-          ws.send "__send_cmd__[[dyndoc#session_list]]__"+Session.mngr.sessions_summary+"__[[WS_END_TOKEN]]__"
+          if Session.mngr.session_admin_ok?
+            p [:session_id,id]
+            send_dyndoc(ws,"#session_list",Session.mngr.sessions_summary)
+          end
         when "session_all_clients_element"
-          # cmd,jq_id=content.strip.split(",").map{|e| e.strip}
-          # cmd_for_client="__send_cmd__[[jquery_"+cmd+"#"+jq_id+"]]____[[WS_END_TOKEN]]__"
-          # p [:cmd_for_client,cmd_for_client]
-          # Session.mngr.session_all_ws_clients(id).each do |ws_cli|
-          #   ws_cli.send cmd_for_client
-          # end
           cmd,qid=content.strip.split(",").map{|e| e.strip}
           html_content=""
           case cmd
@@ -102,10 +142,9 @@ DyndocServerApp = lambda do |env|
           when "hide"
 
           end
-          cmd_for_client="__send_cmd__[[jquery_html#session_content]]__"+html_content+"__[[WS_END_TOKEN]]__"
-          p [:cmd_for_client,cmd_for_client]
+          
           Session.mngr.session_all_ws_clients(id).each do |ws_cli|
-            ws_cli.send cmd_for_client
+            send_jquery(ws_cli,"html","#session_content",html_content)
           end
         end
       end

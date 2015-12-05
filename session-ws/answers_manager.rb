@@ -45,6 +45,31 @@ class Answers
 		File.join(@session_wdir[id],user)
 	end
 
+	@@question_form_index=".question_form_index"
+
+	def load_form_list(html=true)
+		filename=File.join(@root_session,@@question_form_index)
+  		form_list=(File.exist? filename) ? eval(File.read(filename)) : []
+		if html
+			form_list.map! do |id|
+				"<option value='"+id.strip+"'>"+id+"</option>"
+			end
+			form_list=form_list.join("\n")
+		end
+		form_list
+	end
+
+	def load_question_list(id,html=true)
+		question_list=@questions[id][:ids].dup
+		if html
+			question_list.map! do |qid|
+				"<option value='"+qid.strip+"'>"+qid+"</option>"
+			end
+			question_list=question_list.join("\n")
+		end
+		question_list
+	end
+
 	def load_questions(id,passwd)
 		return unless id
 		init_session(id,passwd)
@@ -56,6 +81,16 @@ class Answers
 		@answers[id]={}
 		@session_wdir[id]=File.join(@root_session,session_id(id),".answers",@answer_id[id])
 		FileUtils.mkdir_p(@session_wdir[id])
+		## @questions[:ids],@questions[:questions]
+		@questions[id]
+	end	
+
+	def reload_questions(id)
+		return unless id
+		if session_active(id)
+			filename=File.join(@root_session,session_id(id),"questions")
+			@questions[id]=eval(File.read(filename)) if File.exist? filename
+		end
 		## @questions[:ids],@questions[:questions]
 		@questions[id]
 	end	

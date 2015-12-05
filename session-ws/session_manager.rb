@@ -11,6 +11,19 @@ class Session
 		@ws_clients = {}
 	end
 
+	def session_admin_login?(try,secret="ThanksLife!")
+		@session_admin_ok=false
+		if File.exist?(secret_file=File.join(File.dirname(__FILE__),".secret"))
+			secret=File.read(secret_file)
+		end
+		p [:secret,secret.strip,try.strip]
+		@session_admin_ok= (secret.strip == try.strip)
+	end
+
+	def session_admin_ok?
+		@session_admin_ok
+	end
+
 	def session_new(id,passwd)
 		if (questions=Answers.mngr.load_questions(id,passwd))
 			@sessions[id] = {:users=>[],:user_info => {},:ws_clients => {},:passwd => passwd,:q_ids => questions[:ids],:questions => questions[:questions]}
@@ -19,15 +32,27 @@ class Session
 		end
 	end
 
+	## Admin 
+	def session_reload_questions(id)
+		questions=Answers.mngr.reload_questions(id)
+		p [:questions,questions]
+		if (questions)
+			@sessions[id][:q_ids] = questions[:ids]
+			@sessions[id][:questions] = questions[:questions]
+		end
+	end
+
 	def session_answer_id(id)
 		@sessions[id][:passwd]
 	end
 
-	def session_question(id,qid)
+	def session_question(id,qid,mode=[:html,:js])
 		
 		questions=@sessions[id][:questions]
 		p [qid,questions.keys]
-		questions[qid][:html] if questions[qid]
+		res=""
+		mode.each{|m| res << questions[qid][m]} if questions[qid]
+		res
 	end
 
 	def session_remove(id)

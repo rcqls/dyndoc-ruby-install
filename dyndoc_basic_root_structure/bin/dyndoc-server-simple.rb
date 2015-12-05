@@ -63,7 +63,8 @@ module Dyndoc
   			if data =~ /^__send_cmd__\[\[([a-z,_]*)\|?([^\]]*)?\]\]__(.*)__\[\[END_TOKEN\]\]__$/m
           cmd,@tmpl_filename,content = $1,$2,$3
     			##p [:cmd,cmd,:content,content,:filename,@tmpl_filename]
-    			unless @tmpl_filename.empty?
+    			#p [:tmpl_mngr,@tmpl_filename]
+          unless @tmpl_filename.empty?
             Question.session_dir(File.dirname(@tmpl_filename))
           end
           if content.strip == "__EXIT__" 

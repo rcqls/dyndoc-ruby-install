@@ -7,6 +7,10 @@ require 'rubygems'
 require 'bundler/setup'
 require File.expand_path('../dyndoc-session-ws', __FILE__)
 
+use Rack::Static,
+  :urls => ["/tools"],
+  :root => "session"
+
 Faye::WebSocket.load_adapter('thin')
 Faye::WebSocket.load_adapter('rainbows')
 
