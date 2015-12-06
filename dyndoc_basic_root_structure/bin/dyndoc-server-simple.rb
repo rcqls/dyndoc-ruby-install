@@ -85,8 +85,6 @@ module Dyndoc
     			  res = process_dyndoc(content)
     			  ##p [:dyndoc_server,content,res]
     			  socket.write "__send_cmd__[[dyndoc]]__"+res+"__[[END_TOKEN]]__"
-    			elsif cmd == "dyndoc_layout_reinit"
-            
           end
   			end
   			socket.close

@@ -17,6 +17,7 @@ module Dyndoc
 			##p [:tmpl_filename,@tmpl_filename]
 			## The layout needs to be reintailized for new dyndoc file but not for the layout (of course)!
 			dyndoc_cmd="dyndoc" 
+			dyndoc_cmd += "_with_tag_tmpl" if reinit.include? :dyndoc_tag_tmpl
 			dyndoc_cmd += "_with_libs_reinit" if reinit.include? :dyndoc_libs
 			dyndoc_cmd += "_with_layout_reinit" if reinit.include? :dyndoc_layout
 
@@ -82,9 +83,20 @@ end
 # dyndoc-ruby-client.rb test.dyn[@127.0.0.1] [output_filename.html]
 # dyndoc-ruby-client.rb test.dyn,layout.dyn[@127.0.0.1] [output_filename.html]
 
-arg=ARGV[0]
+next_i=0
+dyn_tag_tmpl=nil
 
-dyn_output=ARGV[1]
+## very limited tags system
+if ARGV[0] =~ /\-t\=/
+	next_i=1
+	dyn_tag_tmpl="[#<]{#opt]"+ARGV[0][3..-1].strip+"[#opt}"
+	p [:dyn_tag_tmpl,dyn_tag_tmpl]
+end
+
+arg=ARGV[next_i]
+dyn_output=ARGV[next_i + 1]
+
+
 
 if arg.include? "@"
 	arg,addr=arg.split("@")
@@ -124,8 +136,14 @@ dyn_layout=nil if dyn_layout and !File.exist? dyn_layout
 
 if dyn_file
 	code=File.read(dyn_file)
+	code = dyn_tag_tmpl+code if dyn_tag_tmpl
 	code = '[#require]\n'+dyn_libs+'[#main][#>]' + code if dyn_libs
-	cli=Dyndoc::Client.new(code,File.expand_path(dyn_file),addr,[:dyndoc_libs,:dyndoc_layout])
+	dyndoc_start=[:dyndoc_libs,:dyndoc_layout]
+	## tag tmpl attempt to communicate to the server
+	if dyn_tag_tmpl
+		
+	end
+	cli=Dyndoc::Client.new(code,File.expand_path(dyn_file),addr,dyndoc_start)
 
 	if dyn_layout
 	 	cli=Dyndoc::Client.new(File.read(dyn_layout),"",addr) #File.expand_path(dyn_layout),addr)
