@@ -7,7 +7,7 @@ require "dyndoc-core"
 require File.dirname(__FILE__)+"/session_manager"
 require File.dirname(__FILE__)+"/answers_manager"
 
-static  = Rack::File.new(File.join(File.dirname(__FILE__),"session"))
+static  = Rack::File.new(static_root=File.join(File.dirname(__FILE__),"session"))
 options = {:extensions => [PermessageDeflate], :ping => 5}
 
 Dyndoc.cfg_dyn['dyndoc_session']=:interactive
@@ -161,6 +161,19 @@ DyndocServerApp = lambda do |env|
     ws.rack_response
 
   else
+    ##p [:env,env]
+    path_info=env["PATH_INFO"]
+    if path_info == "/admin"
+      local=(env["REMOTE_ADDR"]=="127.0.0.1" ? "_local" : "")
+      env["PATH_INFO"]="/mobile/admin/session_admin"+local+".html"
+    else
+      html_ext=(!(path_info.include? ".") and path_info[-4..-1] != "html") ? ".html" : ""
+      html_files=Dir[File.join("session","questions","**"+path_info+html_ext)]
+      unless html_files.empty?
+        p [:html_files,html_files] 
+        env["PATH_INFO"]=html_files[0][7..-1]
+      end
+    end
     static.call(env)
   end
 end

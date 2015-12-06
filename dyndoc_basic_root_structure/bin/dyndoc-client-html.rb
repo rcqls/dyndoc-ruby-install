@@ -90,7 +90,6 @@ dyn_tag_tmpl=nil
 if ARGV[0] =~ /\-t\=/
 	next_i=1
 	dyn_tag_tmpl="[#<]{#opt]"+ARGV[0][3..-1].strip+"[#opt}"
-	p [:dyn_tag_tmpl,dyn_tag_tmpl]
 end
 
 arg=ARGV[next_i]
