@@ -162,16 +162,19 @@ DyndocServerApp = lambda do |env|
 
   else
     ##p [:env,env]
-    path_info=env["PATH_INFO"]
+    path_info=File.join(File.dirname(env["PATH_INFO"]),File.basename(env["PATH_INFO"],".html"))
     local=(env["REMOTE_ADDR"]=="127.0.0.1" ? "_local" : "")
     if path_info == "/admin"
       env["PATH_INFO"]="/mobile/admin/session_admin"+local+".html"
     else
-      html_ext=(!(path_info.include? ".") and path_info[-4..-1] != "html") ? ".html" : ""
-      html_files=Dir[File.join("session","questions","**"+path_info+local+html_ext)]
+      file_ext=(!(path_info.include? ".")) ? ".html" : ""
+      ##p [:html_files_dir,File.join(static_root,"questions","**"+path_info+local+file_ext)]
+      html_files=Dir[File.join(static_root,"questions","**"+path_info+local+file_ext)]
+      ##p [:html_files,html_files]
       unless html_files.empty?
-        p [:html_files,html_files] 
-        env["PATH_INFO"]=html_files[0][7..-1]
+        html_file="/"+Pathname(html_files[0]).relative_path_from(Pathname(static_root)).to_s
+        ##p [:html_file,html_file,html_files]
+        env["PATH_INFO"]=html_file
       end
     end
     static.call(env)

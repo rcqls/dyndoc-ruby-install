@@ -4,12 +4,12 @@
 #     rainbows -c examples/rainbows.conf -E production examples/config.ru -p 7000
 
 require 'rubygems'
-require 'bundler/setup'
+#require 'bundler/setup'
 require File.expand_path('../dyndoc-session-ws', __FILE__)
 
 use Rack::Static,
   :urls => ["/tools"],
-  :root => "session"
+  :root => File.expand_path("../session",__FILE__)
 
 Faye::WebSocket.load_adapter('thin')
 Faye::WebSocket.load_adapter('rainbows')
