@@ -72,10 +72,12 @@ module Dyndoc
     				@server.close
     				break
     			end
+
           if cmd =~ /(.*)_with_layout_reinit$/
               LayoutMngr.reinit
               cmd=$1
           end
+          
           if cmd =~ /(.*)_with_libs_reinit$/
               reinit_dyndoc
               cmd=$1

@@ -14,7 +14,7 @@ module Dyndoc
 		def initialize(cmd,tmpl_filename,addr="127.0.0.1",reinit=[],port=7777)
 			
 			@addr,@port,@cmd,@tmpl_filename=addr,port,cmd,tmpl_filename
-			##p [:tmpl_filename,@tmpl_filename]
+			##p [:tmpl_filename,@tmpl_filename,@cmd]
 			## The layout needs to be reintailized for new dyndoc file but not for the layout (of course)!
 			dyndoc_cmd="dyndoc" 
 			dyndoc_cmd += "_with_tag_tmpl" if reinit.include? :dyndoc_tag_tmpl
@@ -78,10 +78,9 @@ module Dyndoc
 	end
 end
 
-
 # USAGE:
-# dyndoc-ruby-client.rb test.dyn[@127.0.0.1] [output_filename.html]
-# dyndoc-ruby-client.rb test.dyn,layout.dyn[@127.0.0.1] [output_filename.html]
+# dyndoc-ruby-client.rb|dyn-cli test.dyn[@127.0.0.1] [output_filename.html]
+# dyndoc-ruby-client.rb|dyn-cli test.dyn,layout.dyn[@127.0.0.1] [output_filename.html]
 
 next_i=0
 dyn_tag_tmpl=nil
@@ -114,6 +113,7 @@ else
 	end
 end
 
+
 if !dyn_layout and File.exist? ".dyn_layout"
 	dyn_layout=File.read(".dyn_layout").strip
 end
@@ -122,12 +122,12 @@ if !dyn_layout and File.exist?(etc_dyn_layout=File.join(ENV["HOME"],".dyndocker"
 	dyn_layout=File.read(etc_dyn_layout).strip
 end
 
-if !dyn_libs and File.exist? ".dynlibs" 
-	dyn_libs='[#require]\n'+File.read(etc_dyn_libs).strip+'[#main][#>]'
+if !dyn_libs and File.exist? ".dynlibs"
+	dyn_libs=File.read(".dynlibs").strip
 end
 
 if !dyn_libs and File.exist?(etc_dyn_libs=File.join(ENV["HOME"],".dyndocker","etc","dyn_cli_libs"))
-	dyn_libs='[#require]\n'+File.read(etc_dyn_libs).strip+'[#main][#>]'
+	dyn_libs=File.read(etc_dyn_libs).strip
 end
 
 dyn_file=nil unless File.exist? dyn_file
@@ -142,6 +142,7 @@ if dyn_file
 	if dyn_tag_tmpl
 		
 	end
+
 	cli=Dyndoc::Client.new(code,File.expand_path(dyn_file),addr,dyndoc_start)
 
 	if dyn_layout
