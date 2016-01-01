@@ -31,7 +31,7 @@ module Dyndoc
 			last=data.pop
 			resCmd=decode_cmd(data.join(""))
 			##p [:resCmd,resCmd]
-			if resCmd[:cmd] != "windows_platform"
+			if resCmd and resCmd[:cmd] != "windows_platform"
 				@content=resCmd[:content]
 			end
 		end
