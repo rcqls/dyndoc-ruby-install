@@ -47,7 +47,7 @@ module Dyndoc
       return @content
     end
 
-    def init_server  
+    def init_server
       @server = TCPServer.new('0.0.0.0',7777)
     end
 
@@ -67,7 +67,7 @@ module Dyndoc
           unless @tmpl_filename.empty?
             Question.session_dir(File.dirname(@tmpl_filename))
           end
-          if content.strip == "__EXIT__" 
+          if content.strip == "__EXIT__"
     				socket.close
     				@server.close
     				break
@@ -77,7 +77,7 @@ module Dyndoc
               LayoutMngr.reinit
               cmd=$1
           end
-          
+
           if cmd =~ /(.*)_with_libs_reinit$/
               reinit_dyndoc
               cmd=$1

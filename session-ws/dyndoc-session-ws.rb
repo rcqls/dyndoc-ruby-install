@@ -52,11 +52,11 @@ DyndocServerApp = lambda do |env|
               user,passwd,info=$1,$2,$3
               msg=""
               if Session.mngr.session_ok?(id,passwd)
-                Session.mngr.session_user_add(id,ws,user,info) 
+                Session.mngr.session_user_add(id,ws,user,info)
                 msg="User #{user} connected and ready to play!"
               else
                 msg = "User #{user} disconnected! Bad session id or password!"
-              end 
+              end
               #p msg
               send_dyndoc(ws,"#session_msg",msg)
               send_dyndoc(ws_admin,"#session_list",Session.mngr.sessions_summary)
@@ -69,7 +69,7 @@ DyndocServerApp = lambda do |env|
           if id and Session.mngr.is_session? id
 
             if (user=Session.mngr.session_user_id(id,ws))
-              
+
               if content =~ /^([^\|]*)\|([^\|]*)$/
                 qid,answer=$1,$2
                 Answers.mngr.set_user_answer(id,user,qid,answer)
@@ -78,7 +78,7 @@ DyndocServerApp = lambda do |env|
                 msg="Answer not sent!"
               end
             else
-              # Normally this does never happen! 
+              # Normally this does never happen!
               msg="User not registered for this session!"
             end
             p [:msg,msg]
@@ -142,13 +142,13 @@ DyndocServerApp = lambda do |env|
           when "hide"
 
           end
-          
+
           Session.mngr.session_all_ws_clients(id).each do |ws_cli|
             send_jquery(ws_cli,"html","#session_content",html_content)
           end
         end
       end
-      
+
     end
 
     ws.onclose = lambda do |event|
@@ -166,6 +166,8 @@ DyndocServerApp = lambda do |env|
     local=(env["REMOTE_ADDR"]=="127.0.0.1" ? "_local" : "")
     if path_info == "/admin"
       env["PATH_INFO"]="/mobile/admin/session_admin"+local+".html"
+    elsif path_info == "/register"
+      env["PATH_INFO"]="/mobile/admin/session_register"+local+".html"
     else
       file_ext=(!(path_info.include? ".")) ? ".html" : ""
       ##p [:html_files_dir,File.join(static_root,"questions","**"+path_info+local+file_ext)]

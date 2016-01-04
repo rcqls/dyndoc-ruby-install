@@ -36,11 +36,15 @@ OptionParser.new do |opts|
     ## cmd << :save << :view if c.include? "x"
     ## cmd =[:cat] if cmd.empty? #and  cfg_dyn[:model_doc]=="content"
     ## cmd = [:pdf] if c=="pdf" #only pdflatex
-    Settings["cfg_dyn.cmd_doc"] = cmd 
+    Settings["cfg_dyn.cmd_doc"] = cmd
   }
 
   opts.on("-l", "--list", "list of documents available") do
     Settings["cfg_dyn.cmd_doc"] = [:list]
+  end
+
+  opts.on('-D','--debug','debug mode') do
+    Settings['cfg_dyn.debug']=true
   end
 
   opts.on("-p", "--pandoc ", "filter for pandoc (tex2docx,...)") do |f|
