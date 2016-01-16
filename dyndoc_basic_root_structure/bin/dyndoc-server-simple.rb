@@ -37,6 +37,7 @@ module Dyndoc
     def process_dyndoc(content)
       ##p [:process_dyndoc_content,content]
       @content=@tmpl_mngr.parse(content)
+      ##Dyndoc.warn :content, @content
       @tmpl_mngr.filterGlobal.envir["body.content"]=@content
       if @tmpl_filename
         @tmpl_mngr.filterGlobal.envir["_FILENAME_CURRENT_"]=@tmpl_filename.dup

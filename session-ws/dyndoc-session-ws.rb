@@ -25,6 +25,18 @@ def send_jquery(ws,cmd,id,content="")
   ws.send "__send_cmd__[[jquery_"+cmd+id+"]]__"+content+"__[[WS_END_TOKEN]]__"
 end
 
+notify_opt={
+  warn: '{"type": "warning","delay": 2000}'
+}
+
+def send_notify(ws,msg,opt=nil)
+  if opt
+    send_jquery(ws,"json_notify","",'["'+msg+'",'+opt+']')
+  else
+    send_jquery(ws,"notify","",msg)
+  end
+end
+
 ws_admin=nil
 
 DyndocServerApp = lambda do |env|
@@ -37,7 +49,7 @@ DyndocServerApp = lambda do |env|
       #p [:data,event.data]
       if data =~ /^__send_cmd__\[\[([a-z,_]*)(\#[^\]]*)?\]\]__(.*)__\[\[WS_END_TOKEN\]\]__$/m
         cmd,id,content = $1,$2,$3
-        ##p [:cmd,cmd,:content,content]
+        ##p [:cmd,cmd,:id,id,:content,content]
         case cmd
         when "dyndoc"
           # res = process_dyndoc(content)
@@ -46,6 +58,20 @@ DyndocServerApp = lambda do |env|
           ##p [:dyndoc_server,content,res]
           #p [:sent,"__send_cmd__[[dyndoc"+(id||"")+"]]__"+content+"__[[WS_END_TOKEN]]__"]
           send_dyndoc(ws,id,content)
+        when "session_register"
+          if id
+            user=content.split("__|__",-1)
+              ##p [:register,user]
+              msg=Session.mngr.session_user_register(user)
+              if msg
+                send_dyndoc(ws,"#msg-register",msg[1])
+                send_jquery(ws,"hide","#form-register") if msg[0]==0
+              end
+              #p msg
+              #send_dyndoc(ws,"#session_msg",msg)
+              #send_dyndoc(ws_admin,"#session_list",Session.mngr.sessions_summary)
+
+          end
         when "session_login"
           if id and Session.mngr.is_session? id
             if content =~ /^([^\|]*)\|([^\|]*)\|([^\|]*)$/
@@ -61,11 +87,13 @@ DyndocServerApp = lambda do |env|
               send_dyndoc(ws,"#session_msg",msg)
               send_dyndoc(ws_admin,"#session_list",Session.mngr.sessions_summary)
             else
-              p "ici"
+              ##p "ici"
             end
-            p [id,Session.mngr.session_show(id)]
+            ##p [id,Session.mngr.session_show(id)]
           end
         when "session_answer"
+          #p [:session_answer,id,(Session.mngr.is_session? session_id)]
+          #p [:session_answer,(Session.mngr.is_session? id)]
           if id and Session.mngr.is_session? id
 
             if (user=Session.mngr.session_user_id(id,ws))
@@ -81,14 +109,65 @@ DyndocServerApp = lambda do |env|
               # Normally this does never happen!
               msg="User not registered for this session!"
             end
-            p [:msg,msg]
-            send_dyndoc(ws,"#session_msg",msg)
+            #p [:msg,msg]
+            send_jquery(ws,"notify","",msg)
+          end
+
+      when "login_admin_session"
+            #content is here the admin password
+            #p [:passwd_admin,content]
+            login,passwd=content.split("__|__",-1)
+            if login.strip.downcase == "admin" and Session.mngr.session_admin_login? passwd
+              send_jquery(ws,"panel","#login-panel","close")
+              #send_jquery(ws,"panel","#menu-panel","open")
+              send_jquery(ws,"show","#session_admin")
+              send_jquery(ws,"html","#session_id_admin",Answers.mngr.load_form_list)
+              send_jquery(ws,"trigger","#session_id_admin","change")
+              send_dyndoc(ws,"#session_list",Session.mngr.sessions_summary)
+              # link to #page-session
+              send_jquery(ws,"json_pagecontainer",":mobile-pagecontainer",'["change", "#page-session"]' );
+              # register ws_admin
+              ws_admin = ws
+            else
+              p [:bad_passwd]
+              send_notify(ws,"Bad password!",notify_opt[:warn])
+            end
+
+      when "login_user_session"
+            #content is here the admin password
+            #p [:passwd_admin,content]
+            login,passwd=content.split("__|__",-1)
+            if Session.mngr.session_user_login?(login,passwd,ws)
+              send_jquery(ws,"panel","#login-panel","close")
+              send_jquery(ws,"panel","#session-panel","open")
+              send_jquery(ws,"html","#session-id-select",Answers.mngr.load_form_list)
+              send_jquery(ws,"trigger","#session-id-select","change")
+              # send_jquery(ws,"show","#session_admin")
+              # send_jquery(ws,"html","#session_id_admin",Answers.mngr.load_form_list)
+              # send_jquery(ws,"trigger","#session_id_admin","change")
+              # send_dyndoc(ws,"#session_list",Session.mngr.sessions_summary)
+            else
+              send_notify(ws,"Mauvais id ou mote de passe!",true)
+            end
+      when "connect_user_session"
+          session_id,passwd_id=content.split("__|__",-1)
+          if Session.mngr.session_ok?(session_id,passwd_id)
+            if (ret=Session.mngr.add_user_session(session_id,ws))[:ok]
+              send_jquery(ws,"panel","#session-panel","close")
+              send_dyndoc(ws_admin,"#session_list",Session.mngr.sessions_summary)
+              send_jquery(ws,"json_pagecontainer",":mobile-pagecontainer",'["change", "#page-session"]' );
+            else
+              p [:connect,ret]
+              send_notify(ws,ret[:msg],notify_opt[:warn])
+            end
+          else
+            send_notify(ws,"Session #{session_id} not open or password not valid!",notify_opt[:warn])
           end
 
         ## All actions above are admin tasks
       when "session_admin_login"
           #content is here the admin password
-          p [:passwd_admin,content]
+          #p [:passwd_admin,content]
           if Session.mngr.session_admin_login? content
             send_jquery(ws,"hide","#session_admin_login")
             send_jquery(ws,"hide","#session_msg")
@@ -111,16 +190,21 @@ DyndocServerApp = lambda do |env|
           if Session.mngr.session_admin_ok?
             # content is here the password supplied by for other clients
             Session.mngr.session_new(id,content) unless Session.mngr.is_session?(id)
-            p Session.mngr.session_ls
+            ##p Session.mngr.session_ls
             send_dyndoc(ws,"#session_list",Session.mngr.sessions_summary)
             send_jquery(ws,"html","#session_question_id_admin",Answers.mngr.load_question_list(id))
             send_jquery(ws,"trigger","#session_question_id_admin","change")
           end
         when "session_reload"
-          p [:session_reload,Session.mngr.session_admin_ok?]
+          ##p [:session_reload,Session.mngr.session_admin_ok?]
           if Session.mngr.session_admin_ok?
+            # First reload all forms list
+            send_jquery(ws,"html","#session_id_admin",Answers.mngr.load_form_list)
+            send_jquery(ws,"trigger","#session_id_admin","change")
+            # Reload current questions if there is a change
             Session.mngr.session_reload_questions(id)
-            send_jquery(ws,"html","#session_question_id_admin",Answers.mngr.load_question_list(id))
+            question_list=Answers.mngr.load_question_list(id)
+            send_jquery(ws,"html","#session_question_id_admin",question_list) if question_list
           end
         when "session_remove"
           if Session.mngr.session_admin_ok?
@@ -130,7 +214,7 @@ DyndocServerApp = lambda do |env|
           end
         when "session_ls"
           if Session.mngr.session_admin_ok?
-            p [:session_id,id]
+            ##p [:session_id,id]
             send_dyndoc(ws,"#session_list",Session.mngr.sessions_summary)
           end
         when "session_all_clients_element"
@@ -144,7 +228,7 @@ DyndocServerApp = lambda do |env|
           end
 
           Session.mngr.session_all_ws_clients(id).each do |ws_cli|
-            send_jquery(ws_cli,"html","#session_content",html_content)
+            send_jquery(ws_cli,"html","#session-user-content",html_content)
           end
         end
       end
@@ -152,8 +236,8 @@ DyndocServerApp = lambda do |env|
     end
 
     ws.onclose = lambda do |event|
-      p [:close, event.code, event.reason]
-      p [:ws,ws.object_id]
+      ##p [:close, event.code, event.reason]
+      ##p [:ws,ws.object_id]
       Session.mngr.session_user_remove(ws)
       ws = nil
     end
@@ -165,9 +249,11 @@ DyndocServerApp = lambda do |env|
     path_info=File.join(File.dirname(env["PATH_INFO"]),File.basename(env["PATH_INFO"],".html"))
     local=(env["REMOTE_ADDR"]=="127.0.0.1" ? "_local" : "")
     if path_info == "/admin"
-      env["PATH_INFO"]="/mobile/admin/session_admin"+local+".html"
+      env["PATH_INFO"]="/mobile/session_admin"+local+".html"
     elsif path_info == "/register"
-      env["PATH_INFO"]="/mobile/admin/session_register"+local+".html"
+      env["PATH_INFO"]="/mobile/session_register"+local+".html"
+    elsif path_info == "/user"
+      env["PATH_INFO"]="/mobile/session_user"+local+".html"
     else
       file_ext=(!(path_info.include? ".")) ? ".html" : ""
       ##p [:html_files_dir,File.join(static_root,"questions","**"+path_info+local+file_ext)]

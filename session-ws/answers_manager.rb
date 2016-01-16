@@ -1,9 +1,9 @@
 ## Questions: peut être lent et placé directement dans le fichier "questions".
 ## A chaque session ce fichier est chargé en début et à chaque envoi d'une question aux utilisateurs...
 
-## Answers: correspond aux résultats d'une session relative au questionnaire. 
-## Il peut y en avoir plusieurs pour un même questionnaire. 
-## Les résultats sont sauvegardés assez souvent. 
+## Answers: correspond aux résultats d'une session relative au questionnaire.
+## Il peut y en avoir plusieurs pour un même questionnaire.
+## Les résultats sont sauvegardés assez souvent.
 ## Ainsi, en cas de panne, l'état de la session sera rétablie après réouverture de ce fichier.
 require 'fileutils'
 
@@ -60,17 +60,20 @@ class Answers
 	end
 
 	def load_question_list(id,html=true)
-		question_list=@questions[id][:ids].dup
-		if html
-			question_list.map! do |qid|
-				"<option value='"+qid.strip+"'>"+qid+"</option>"
+		question_list=nil
+		if @questions and @questions[id]
+			question_list=@questions[id][:ids].dup
+			if html
+				question_list.map! do |qid|
+					"<option value='"+qid.strip+"'>"+qid+"</option>"
+				end
+				question_list=question_list.join("\n")
 			end
-			question_list=question_list.join("\n")
 		end
 		question_list
 	end
 
-	def load_questions(id,passwd)
+	def load_questions(id,passwd,creation_time)
 		return unless id
 		init_session(id,passwd)
 		if session_active(id)
@@ -79,11 +82,11 @@ class Answers
 		end
 		## when questions loaded
 		@answers[id]={}
-		@session_wdir[id]=File.join(@root_session,session_id(id),".answers",@answer_id[id])
+		@session_wdir[id]=File.join(@root_session,"answers",session_id(id),creation_time)
 		FileUtils.mkdir_p(@session_wdir[id])
 		## @questions[:ids],@questions[:questions]
 		@questions[id]
-	end	
+	end
 
 	def reload_questions(id)
 		return unless id
@@ -93,7 +96,7 @@ class Answers
 		end
 		## @questions[:ids],@questions[:questions]
 		@questions[id]
-	end	
+	end
 
 	def init_user_answer(id,user)
 		filename=user_answer_filename(id,user)

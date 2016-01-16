@@ -84,7 +84,6 @@ end
 
 next_i=0
 dyn_tag_tmpl=nil
-
 ## very limited tags system
 if ARGV[0] =~ /\-t\=/
 	next_i=1
@@ -169,7 +168,6 @@ dyn_layout=nil if dyn_layout and !File.exist? dyn_layout
 
 if dyn_file
 	code=File.read(dyn_file)
-	code = dyn_tag_tmpl+code if dyn_tag_tmpl
 	if dyn_libs or dyn_pre_code
 		code_pre = ""
 		code_pre += dyn_pre_code + '\n' if dyn_pre_code
@@ -177,6 +175,7 @@ if dyn_file
 		code = code_pre + '[#main][#>]' + code
 	end
 	code += '\n' + dyn_post_code if dyn_post_code
+	code = dyn_tag_tmpl+code if dyn_tag_tmpl
 	dyndoc_start=[:dyndoc_libs,:dyndoc_layout]
 	## tag tmpl attempt to communicate to the server
 	if dyn_tag_tmpl
