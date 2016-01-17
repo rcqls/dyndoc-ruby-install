@@ -6,8 +6,11 @@
 ## Les résultats sont sauvegardés assez souvent.
 ## Ainsi, en cas de panne, l'état de la session sera rétablie après réouverture de ce fichier.
 require 'fileutils'
+require './mongoid_utils'
 
 class Answers
+
+	include MongoidUtils
 
 	@@mngr=nil
 
@@ -82,7 +85,7 @@ class Answers
 		end
 		## when questions loaded
 		@answers[id]={}
-		@session_wdir[id]=File.join(@root_session,"answers",session_id(id),creation_time)
+		@session_wdir[id]=File.join(@root_session,"answers",session_id(id),creation_time+"_"+passwd)
 		FileUtils.mkdir_p(@session_wdir[id])
 		## @questions[:ids],@questions[:questions]
 		@questions[id]
@@ -112,16 +115,31 @@ class Answers
 	## answers are save by answer and user in one file
 	## in the subdir <session_id>/<answer_id>
 	def save_user_answer(id,user)
-		filename=user_answer_filename(id,user)
-		File.open(filename,"w") do |f|
-			f << @answers[id][user].inspect
+		# filename=user_answer_filename(id,user)
+		# File.open(filename,"w") do |f|
+		# 	f << @answers[id][user].inspect
+		# end
+		ok=false
+		if mongoid? :QuestionForm
+			if (question_form=Session.mngr.question_form?)
+				if (current_user_answers=question_form.user_answers.select {|e| e.login ==user}.last)
+					 @answers[id][user]=(current_user_answers.question_answers).merge(@answers[id][user])
+					current_user_answers.update_attributes({question_answers: @answers[id][user]})
+				else
+					question_form.user_answers.create({login: user,question_answers: @answers[id][user]})
+				end
+				ok=true
+			end
 		end
+		return ok
 	end
 
 	def get_question_answers(id,qid)
 		answers={}
-		@questions[id][:ids].each do |qid|
-			answers[id]=@answers[id][user][qid]
+		if @questions[id][:ids].include? qid
+			session_show(id).each do |user|
+				answers[user]=@answers[id][user][qid]
+			end
 		end
 		answers
 	end

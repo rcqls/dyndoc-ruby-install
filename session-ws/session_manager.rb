@@ -1,4 +1,8 @@
+require './mongoid_utils'
+
 class Session
+
+	include MongoidUtils
 
 	@@mngr=nil
 	def Session.mngr
@@ -15,7 +19,8 @@ class Session
 
 	def session_admin_login?(try,secret="ThanksLife!")
 		@session_admin_ok=false
-		if Module.constants.include? :Mongoid and Module.constants.include? :SessionAdmin
+		#if Module.constants.include? :Mongoid and Module.constants.include? :SessionAdmin
+		if mongoid? :SessionAdmin
 			secret=SessionAdmin.pluck(:passwd).first
 		elsif File.exist?(secret_file=File.join(File.dirname(__FILE__),".secret"))
 			secret=File.read(secret_file)
@@ -34,13 +39,33 @@ class Session
 	end
 
 	def session_new(id,passwd)
-		creation_time=Time.now.inspect.gsub(" ","")
+		creation_time=Time.now.strftime "%y-%m-%d"
 		if (questions=Answers.mngr.load_questions(id,passwd,creation_time))
 			@sessions[id] = {:users=>[],:user_info => {},:ws_clients => {},:passwd => passwd,:q_ids => questions[:ids],:questions => questions[:questions],:creation_time => creation_time}
 			##p [:sessions,@sessions]
+			if mongoid? :QuestionForm
+				# form_passwd is passwd completed with day
+				crit=QuestionForm.where(form_id: id,form_passwd: creation_time+"_"+passwd)
+				if crit.exists?
+					@current_question_form_mongo=crit.last
+				else
+					@current_question_form_mongo=QuestionForm.new({form_id: id, form_passwd: creation_time+"_"+passwd})
+					@current_question_form_mongo.save
+					# answer affected to user god
+					answer={}
+					questions[:questions].keys.each{|e| answer[e]=questions[:questions][e][:answer]}
+					p [:answer,answer]
+					@current_question_form_mongo.user_answers.create({login: "god",question_answers: answer})
+				end
+				p [:session_new,@current_question_form_mongo]
+			end
 		else
 			puts "No questions for session id #{id}!"
 		end
+	end
+
+	def question_form?
+		@current_question_form_mongo
 	end
 
 	def session_creation_time(id)
@@ -107,7 +132,8 @@ class Session
 	def session_user_register(user)
 		msg=nil
 		user=user.map &:strip
-		if Module.constants.include? :Mongoid and Module.constants.include? :SessionUser
+		##if Module.constants.include? :Mongoid and Module.constants.include? :SessionUser
+		if mongoid? :SessionUser
 			if SessionUser.pluck(:login).to_a.include? user[0]
 				msg=[1,"Login already used!"]
 			elsif user[4] != user[9]
@@ -129,7 +155,8 @@ class Session
 
 	def session_user_login?(login,passwd,ws_client)
 		@session_user_ok[ws_client]=false
-		if Module.constants.include? :Mongoid and Module.constants.include? :SessionUser
+		##if Module.constants.include? :Mongoid and Module.constants.include? :SessionUser
+		if mongoid? :SessionUser
 			secret=SessionUser.where(login: login).pluck(:passwd).first
 			##p [:secret,secret.strip,try.strip]
 			@session_user_ok[ws_client]= (secret == passwd)

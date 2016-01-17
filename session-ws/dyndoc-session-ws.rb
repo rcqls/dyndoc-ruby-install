@@ -100,8 +100,11 @@ DyndocServerApp = lambda do |env|
 
               if content =~ /^([^\|]*)\|([^\|]*)$/
                 qid,answer=$1,$2
-                Answers.mngr.set_user_answer(id,user,qid,answer)
-                msg="Answer sent!"
+                if Answers.mngr.set_user_answer(id,user,qid,answer)
+                  msg="Answer sent and saved!"
+                else
+                  msg="Answer sent but not saved!"
+                end
               else
                 msg="Answer not sent!"
               end
