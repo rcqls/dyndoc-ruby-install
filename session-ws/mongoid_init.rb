@@ -1,5 +1,7 @@
 require 'mongoid'
 
+require File.expand_path('../mongoid_utils.rb', __FILE__)
+
 Mongoid.load!(File.expand_path('../mongoid.yml', __FILE__),:development)
 
 class SessionAdmin

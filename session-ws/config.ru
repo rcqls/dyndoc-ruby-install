@@ -5,9 +5,9 @@
 
 require 'rubygems'
 #require 'bundler/setup'
+require File.expand_path('../mongoid_init', __FILE__)
 require File.expand_path('../dyndoc-session-ws', __FILE__)
 
-require File.expand_path('../mongoid_init', __FILE__)
 use Rack::Static,
   :urls => ["/tools"],
   :root => File.expand_path("../session",__FILE__)

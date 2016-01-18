@@ -1,5 +1,3 @@
-require './mongoid_utils'
-
 class Session
 
 	include MongoidUtils

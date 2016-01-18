@@ -6,7 +6,6 @@
 ## Les résultats sont sauvegardés assez souvent.
 ## Ainsi, en cas de panne, l'état de la session sera rétablie après réouverture de ce fichier.
 require 'fileutils'
-require './mongoid_utils'
 
 class Answers
 
