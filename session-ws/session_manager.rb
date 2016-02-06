@@ -87,12 +87,34 @@ class Session
 	end
 
 	def session_question(id,qid,mode=[:html,:js])
-
-		questions=@sessions[id][:questions]
-		##p [qid,questions.keys]
 		res=""
-		mode.each{|m| res << questions[qid][m]} if questions[qid]
+		if @sessions[id]
+			questions=@sessions[id][:questions]
+			##p [qid,questions.keys]
+
+			mode.each{|m| res << questions[qid][m]} if questions[qid]
+		end
 		res
+	end
+
+	def session_questions(id)
+		res=""
+		if @sessions[id]
+			res << '<div data-role="controlgroup" id="session_question_cg">'
+			questions=@sessions[id][:questions]
+			questions.keys.each do |qid|
+				res << '<div data-role="collapsible" data-collapsed-icon="carat-d" data-expanded-icon="carat-u">' << "\n"
+				res << '<h3>'+qid+'<span class="ui-li-count">0</span></h3><span><a class="ui-btn ui-btn-inline ui-icon-refresh ui-btn-icon-notext">'+id[1..-1]+','+qid+'</a></span>' << "\n"
+				res << questions[qid][:html]
+				# Mathjax is in html: res << questions[qid][:js]
+				res << '</div>' << "\n"
+			end
+			res << '</div>' << "\n"
+			res << '<script>' << "\n"
+			res << '$(".ui-icon-refresh" ).click(function(ui) {var tmp=ui.currentTarget.innerText.split(",");var id=tmp[0],qid=tmp[1];console.log("ici:"+id+","+qid);send_cmd("session_all_clients_element",id,"show,"+qid);})' << "\n"
+			res << '$("#session_question_cg" ).controlgroup().trigger("create");' << "\n"
+			res << '</script>'
+		end
 	end
 
 	def session_remove(id)
@@ -116,6 +138,17 @@ class Session
 			res << id + "(" + session_show(id).join(",") + ")"
 		}
 		res.empty? ? "" : '<ul><li>'+res.join("</li><li>")+'</li></ul>'
+	end
+
+	def sessions_list(html: true,admin: false)
+  	form_list=@sessions.keys
+		if html
+			form_list.map! do |id|
+				"<option value='"+(id.strip)[1..-1]+"'>"+id[1..-1]+(admin ? " ("+@sessions[id][:passwd]+")" : "" )+"</option>"
+			end
+			form_list=form_list.join("\n")
+		end
+		form_list
 	end
 
 	def is_session?(id)
@@ -178,7 +211,16 @@ class Session
 				user=@session_users[ws_client][:login]
 				@sessions[id][:users] << user
 				@sessions[id][:ws_clients][user] = ws_client
-				@ws_clients[ws_client]={:user => user, :id => id}
+				if @ws_clients[ws_client] and @ws_clients[ws_client][:user]==user
+					if @ws_clients[ws_client][:ids].include? id
+						# has to never happen
+						ret = {ok: false, msg: "BUG!!! User #{user} already registered for session #{id}"}
+					else
+						@ws_clients[ws_client][:ids] << id
+					end
+				else
+					@ws_clients[ws_client]={:user => user, :ids => [id]}
+				end
 			end
 		else
 			ret = {ok: false, msg: "User #{user} not allowed for session #{id}"}
@@ -197,22 +239,24 @@ class Session
 	end
 
 	def session_user_id(id,ws_client)
-		(@ws_clients[ws_client][:id] == id) ? @ws_clients[ws_client][:user] : nil
+		(@ws_clients[ws_client][:ids].include? id) ? @ws_clients[ws_client][:user] : nil
 	end
 
 	def session_user_remove(ws_client)
 		if @ws_clients[ws_client]
-			id=@ws_clients[ws_client][:id]
-			##p [:remove_id,id]
-			##p [:remove_ws,@ws_clients[ws_client]]
 			user=@ws_clients[ws_client][:user]
-			@sessions[id][:users].delete(user)
-			@sessions[id][:ws_clients].delete(ws_client)
-			@sessions[id][:user_info].delete(user)
+			@ws_clients[ws_client][:ids].each do |id|
+				##p [:remove_id,id]
+				##p [:remove_ws,@ws_clients[ws_client]]
+				@sessions[id][:users].delete(user)
+				@sessions[id][:ws_clients].delete(ws_client)
+				##@sessions[id][:user_info].delete(user)
+			end
 		end
 	end
 
 	def session_all_ws_clients(id)
+		#p [:session_all_ws_clients,id,@sessions[id]]
 		@sessions[id][:users].map{|user| @sessions[id][:ws_clients][user]}
 	end
 

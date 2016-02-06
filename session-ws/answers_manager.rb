@@ -51,7 +51,7 @@ class Answers
 
 	def load_form_list(html=true)
 		filename=File.join(@root_session,@@question_form_index)
-  		form_list=(File.exist? filename) ? eval(File.read(filename)) : []
+  	form_list=(File.exist? filename) ? eval(File.read(filename)) : []
 		if html
 			form_list.map! do |id|
 				"<option value='"+id.strip+"'>"+id+"</option>"

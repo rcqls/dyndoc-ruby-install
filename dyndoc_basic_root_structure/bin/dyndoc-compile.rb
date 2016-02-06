@@ -3,6 +3,17 @@ require 'dyndoc/document'
 
 ## p Dyndoc.cfg_dir
 
+args=ARGV.select{|name|
+  if (name[0,2]!="--" and name.include? "=")
+    key,*val=name.split("=")
+    val=val.join("=")
+    Settings["cfg_dyn.user_input"] << [key,val]
+    false
+  else
+    true
+  end
+}
+
 require 'optparse'
 
 OptionParser.new do |opts|
@@ -56,10 +67,10 @@ OptionParser.new do |opts|
   #     Settings["cfg_dyn.docker_mode"]=true
   # end
 
-end.parse!
+end.parse!(args)
 
-## ARGV is consumed before
-doc=ARGV[0]
+## ARGV is consumed before except
+doc=args[0]
 
 d=Dyndoc::TemplateDocument.new(doc)
 

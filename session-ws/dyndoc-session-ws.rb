@@ -92,7 +92,8 @@ DyndocServerApp = lambda do |env|
             ##p [id,Session.mngr.session_show(id)]
           end
         when "session_answer"
-          #p [:session_answer,id,(Session.mngr.is_session? session_id)]
+          #
+          p [:session_answer,id,(Session.mngr.is_session? id)]
           #p [:session_answer,(Session.mngr.is_session? id)]
           if id and Session.mngr.is_session? id
 
@@ -131,6 +132,12 @@ DyndocServerApp = lambda do |env|
               send_jquery(ws,"json_pagecontainer",":mobile-pagecontainer",'["change", "#page-session"]' );
               # register ws_admin
               ws_admin = ws
+              ## NEW INTERFACE
+              send_jquery(ws,"show","#session-tabs")
+              send_jquery(ws,"html","#session-id-switcher",Session.mngr.sessions_list(admin: true))
+              send_jquery(ws,"trigger","#session-id-switcher","change")
+              send_jquery(ws,"html","#session-admin-questions-id",Answers.mngr.load_form_list)
+              send_jquery(ws,"trigger","#session-admin-questions-id","change")
             else
               p [:bad_passwd]
               send_notify(ws,"Bad password!",notify_opt[:warn])
@@ -142,23 +149,23 @@ DyndocServerApp = lambda do |env|
             login,passwd=content.split("__|__",-1)
             if Session.mngr.session_user_login?(login,passwd,ws)
               send_jquery(ws,"panel","#login-panel","close")
-              send_jquery(ws,"panel","#session-panel","open")
-              send_jquery(ws,"html","#session-id-select",Answers.mngr.load_form_list)
-              send_jquery(ws,"trigger","#session-id-select","change")
+              send_jquery(ws,"show","#session-user-tabs")
+              send_jquery(ws,"json_pagecontainer",":mobile-pagecontainer",'["change", "#page-session"]' );
+              # send_jquery(ws,"html","#session-id-select",Session.mngr.sessions_list)
+              # send_jquery(ws,"trigger","#session-id-select","change")
               # send_jquery(ws,"show","#session_admin")
               # send_jquery(ws,"html","#session_id_admin",Answers.mngr.load_form_list)
               # send_jquery(ws,"trigger","#session_id_admin","change")
               # send_dyndoc(ws,"#session_list",Session.mngr.sessions_summary)
             else
-              send_notify(ws,"Mauvais id ou mote de passe!",true)
+              send_notify(ws,"Mauvais id ou mote de passe!",notify_opt[:warn])
             end
       when "connect_user_session"
           session_id,passwd_id=content.split("__|__",-1)
           if Session.mngr.session_ok?(session_id,passwd_id)
             if (ret=Session.mngr.add_user_session(session_id,ws))[:ok]
-              send_jquery(ws,"panel","#session-panel","close")
-              send_dyndoc(ws_admin,"#session_list",Session.mngr.sessions_summary)
-              send_jquery(ws,"json_pagecontainer",":mobile-pagecontainer",'["change", "#page-session"]' );
+              ## TODO: send_dyndoc(ws_admin,"#session_list",Session.mngr.sessions_summary)
+              ## send_jquery(ws,"json_pagecontainer",":mobile-pagecontainer",'["change", "#page-session"]' );
             else
               p [:connect,ret]
               send_notify(ws,ret[:msg],notify_opt[:warn])
@@ -166,6 +173,39 @@ DyndocServerApp = lambda do |env|
           else
             send_notify(ws,"Session #{session_id} not open or password not valid!",notify_opt[:warn])
           end
+        when "active_session_user_list_update"
+          send_jquery(ws,"html","#session-user-active-id",Session.mngr.sessions_list)
+          send_jquery(ws,"trigger","#session-user-active-id","change")
+        when "login_user_session_old"
+              #content is here the admin password
+              #p [:passwd_admin,content]
+              login,passwd=content.split("__|__",-1)
+              if Session.mngr.session_user_login?(login,passwd,ws)
+                send_jquery(ws,"panel","#login-panel","close")
+                send_jquery(ws,"panel","#session-panel","open")
+                send_jquery(ws,"html","#session-id-select",Session.mngr.sessions_list)
+                send_jquery(ws,"trigger","#session-id-select","change")
+                # send_jquery(ws,"show","#session_admin")
+                # send_jquery(ws,"html","#session_id_admin",Answers.mngr.load_form_list)
+                # send_jquery(ws,"trigger","#session_id_admin","change")
+                # send_dyndoc(ws,"#session_list",Session.mngr.sessions_summary)
+              else
+                send_notify(ws,"Mauvais id ou mote de passe!",notify_opt[:warn])
+              end
+      when "connect_user_session_old"
+            session_id,passwd_id=content.split("__|__",-1)
+            if Session.mngr.session_ok?(session_id,passwd_id)
+              if (ret=Session.mngr.add_user_session(session_id,ws))[:ok]
+                send_jquery(ws,"panel","#session-panel","close")
+                send_dyndoc(ws_admin,"#session_list",Session.mngr.sessions_summary)
+                send_jquery(ws,"json_pagecontainer",":mobile-pagecontainer",'["change", "#page-session"]' );
+              else
+                p [:connect,ret]
+                send_notify(ws,ret[:msg],notify_opt[:warn])
+              end
+            else
+              send_notify(ws,"Session #{session_id} not open or password not valid!",notify_opt[:warn])
+            end
 
         ## All actions above are admin tasks
       when "session_admin_login"
@@ -197,6 +237,9 @@ DyndocServerApp = lambda do |env|
             send_dyndoc(ws,"#session_list",Session.mngr.sessions_summary)
             send_jquery(ws,"html","#session_question_id_admin",Answers.mngr.load_question_list(id))
             send_jquery(ws,"trigger","#session_question_id_admin","change")
+            ## NEW INTERFACE
+            send_jquery(ws,"html","#session-id-switcher",Session.mngr.sessions_list(admin: true))
+            send_jquery(ws,"trigger","#session-id-switcher","change")
           end
         when "session_reload"
           ##p [:session_reload,Session.mngr.session_admin_ok?]
@@ -209,6 +252,9 @@ DyndocServerApp = lambda do |env|
             question_list=Answers.mngr.load_question_list(id)
             send_jquery(ws,"html","#session_question_id_admin",question_list) if question_list
           end
+        when "session_id_switch_admin"
+          p [:switch, id, Session.mngr.session_questions(id)]
+          send_jquery(ws,"html","#session-admin-question-content",Session.mngr.session_questions(id))
         when "session_remove"
           if Session.mngr.session_admin_ok?
             Session.mngr.session_remove(id)
